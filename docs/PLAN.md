@@ -193,8 +193,8 @@ WebSockets for market data instead of polling REST.
 They are real-time and free, and the prices are exactly where our orders will fill. Paid
 aggregators are only needed for cross-exchange screening, coin metadata or on-chain metrics.
 
-**We don't use CoinMarketCap.** Since we only trade BTC, its multi-coin data (rankings,
-market caps, coin lists) adds nothing. Everything we need comes free from the exchange.
+**We don't use CoinMarketCap or CoinGecko.** Since we only trade BTC, their multi-coin data
+(rankings, market caps, coin lists) adds nothing. Everything we need comes free from the exchange.
 BTC supply, if a strategy ever wants it, follows a fixed issuance schedule and can be
 computed from block height.
 
@@ -202,7 +202,6 @@ computed from block height.
 |---|---|---|---|
 | Exchange WS/REST via CCXT | ✅ Free | — | Live prices, order books, OHLCV, our orders/balances |
 | [Binance public data](https://data.binance.vision) | ✅ Free bulk downloads | — | Historical candles/trades for backtesting |
-| [CoinGecko](https://www.coingecko.com/en/api/pricing) | Demo: ~10k credits/mo, ~30–100 req/min (sources disagree), attribution required | Basic ~$29/mo (annual); Analyst $129/mo ($103 annual) 500k credits; Lite $499/mo 2M credits | Coin lists, market caps, cross-exchange prices |
 | CoinDesk Data (ex-CryptoCompare) | ❌ Free tier retired May 2026 | Sales-only pricing | Skip |
 | [Glassnode](https://glassnode.com) | Free web studio only | ~$49/mo Advanced includes only a "Light API" (~50 calls/day); full API ~$999/mo+ | On-chain metrics. Only if a strategy needs them. |
 | Kaiko / Amberdata / CoinAPI | — | Enterprise, quote-based | Not needed |
@@ -270,7 +269,6 @@ and very small position sizes, after a long testnet run.
 ## Sources
 - CCXT (Pro bundled, exchange counts): https://docs.ccxt.com/docs/comparisons/ccxt-vs-ccxws
 - Binance spot testnet & rate limits: https://developers.binance.com/docs/binance-spot-api-docs
-- CoinGecko pricing (third-party): https://costbench.com/software/blockchain-data-api/coingecko-api, https://apicostcalc.com/fr/blog/coingecko-api-pricing-basic-tier-worst-credit-value.html
 - CoinDesk Data / Glassnode: https://www.spark.money/tools/crypto-api-pricing-comparison, https://comparedge.com/tools/glassnode/pricing
 - Exchange fees: https://www.dextools.io/tutorials/binance-vs-coinbase-vs-kraken-best-exchange-comparison-2026, https://coingape.com/crypto-exchanges/low-fees/, https://www.spark.money/tools/crypto-exchange-fee-comparison
 - Telegram limits: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Avoiding-flood-limits, https://docs.python-telegram-bot.org/en/stable/telegram.ext.aioratelimiter.html
