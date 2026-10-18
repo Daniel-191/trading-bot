@@ -2,7 +2,8 @@
 
 How we build the bot: the parts it needs, the APIs it uses, what they cost, and the order we
 build things in. Trading strategy is deliberately out of scope here. The engine has a
-pluggable strategy interface, and strategies come later.
+pluggable strategy interface, and strategies come later. Strategy research and the options
+we're choosing between are in [`strategy/STRATEGY_OPTIONS.md`](strategy/STRATEGY_OPTIONS.md).
 
 **Scope: Bitcoin only.** The bot trades a single BTC pair (e.g. `BTC/USDT`). The pair is a
 config setting (`TRADING_PAIR`), not hardcoded, so adding another pair later is a config
