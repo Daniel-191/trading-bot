@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Backtests · Trading bot</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#D4AE6C;text-decoration:none}a:hover{color:#E9C98F}
+.app{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;color:#ECE9E2;background:#0A0C0F;-webkit-font-smoothing:antialiased}
+.num{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.serif{font-family:'Instrument Serif',ui-serif,Georgia,serif;font-weight:400;letter-spacing:-0.01em}
+.card{background:#111418;border:1px solid #1E232B;border-radius:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.03)}
+.eyebrow{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8A919B;font-weight:500}
+.muted{color:#8A919B}
+.up{color:#4CC495}.down{color:#EE7B68}.gold{color:#D4AE6C}
+.nav{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;color:#A3A9B2;font-size:14px}
+.nav:hover{background:#13171C;color:#ECE9E2}
+.nav.on{background:#151A20;color:#ECE9E2;box-shadow:inset 0 0 0 1px #232A33}
+.btn{font:inherit;font-size:13px;font-weight:500;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #2A313B;background:#151920;color:#ECE9E2;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.btn:hover{background:#1A1F27}
+.btn-primary{border-color:#8A6A33;background:#B5873A;color:#14100A;font-weight:600}
+.btn-primary:hover{background:#C2944A}
+.seg{display:inline-flex;padding:3px;border-radius:10px;background:#0D1013;border:1px solid #1E232B;gap:2px}
+.seg button{font:inherit;font-size:12px;font-weight:500;color:#8A919B;background:transparent;border:0;border-radius:7px;min-height:30px;padding:0 10px;cursor:pointer}
+.seg button.on{background:#1C2129;color:#ECE9E2}
+.chip{display:inline-flex;align-items:center;font-size:11px;font-weight:600;letter-spacing:0.06em;padding:3px 8px;border-radius:6px}
+.chip-mode{border:1px solid rgba(212,174,108,0.45);color:#D4AE6C;background:rgba(181,135,58,0.08)}
+.chip-done{background:rgba(47,167,124,0.14);color:#5CCF9F}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+.t td{padding:12px 16px;border-bottom:1px solid #171B21;white-space:nowrap}
+.t tr:last-child td{border-bottom:0}
+.t .r{text-align:right}
+.pulse{width:8px;height:8px;border-radius:50%;background:#2FA77C;box-shadow:0 0 0 4px rgba(47,167,124,0.16);flex:none}
+.row{display:flex;align-items:center;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px;flex:1 1 140px;min-width:0}
+.field label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A919B;font-weight:500}
+.field input,.field select{font:inherit;font-size:13px;color:#ECE9E2;background:#0D1013;border:1px solid #232A33;border-radius:10px;min-height:44px;padding:0 12px;box-sizing:border-box;width:100%;appearance:none}
+.run{font:inherit;text-align:left;width:100%;display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:12px;border:1px solid transparent;background:transparent;color:#ECE9E2;cursor:pointer}
+.run:hover{background:#13171C}
+.run.on{background:#151A20;border-color:rgba(212,174,108,0.45)}
+</style>
+</helmet>
+<div class="app" style="min-height: 100vh; display: flex; flex-wrap: wrap">
+
+<aside style="flex: 1 1 232px; box-sizing: border-box; padding: 28px 18px; border-right: 1px solid #161A20; display: flex; flex-direction: column; gap: 32px; background: #0A0C0F">
+<div class="row" style="padding: 0 8px; gap: 10px">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12.5" fill="none" stroke="{{accent}}" stroke-width="1.5"></circle><path d="M8 18 L12.5 13 L15.5 15.5 L20 9.5" fill="none" stroke="#ECE9E2" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<div style="display: flex; flex-direction: column">
+<span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">trading-bot</span>
+<span class="muted" style="font-size: 12px">Control room</span>
+</div>
+</div>
+<nav aria-label="Main" style="display: flex; flex-direction: column; gap: 4px">
+<a class="nav" href="Main.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"></rect></svg>Overview</a>
+<a class="nav" href="Trades.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"></path></svg>Live trading<span class="pulse" style="margin-left: auto"></span></a>
+<a class="nav" href="History.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>Trade history</a>
+<a class="nav on" href="Backtest.dc.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"></path><path d="M10.5 9v6l4.5-3z"></path></svg>Backtests</a>
+<a class="nav" href="Risk.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.5-3.2 8-7.5 9.5-4.3-1.5-7.5-5-7.5-9.5V6z"></path></svg>Risk &amp; system</a>
+</nav>
+<div class="card" style="margin-top: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; border-radius: 12px">
+<div class="row" style="justify-content: space-between"><span class="eyebrow">Mode</span><span class="chip chip-mode">PAPER</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Exchange</span><span>Binance</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Strategy</span><span class="num">dummy-v0</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Version</span><span class="num">0.1.0</span></div>
+<p class="muted" style="margin: 4px 0 0; font-size: 12px; line-height: 1.5">Simulated fills from live prices. No real funds at risk.</p>
+</div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 36px clamp(16px, 3vw, 44px) 56px; display: flex; flex-direction: column; gap: 24px; background: radial-gradient(900px 360px at 75% -120px, rgba(181,135,58,0.07), transparent 70%), #0A0C0F">
+
+<header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="eyebrow">Stored candles, replayed through the live strategy, risk and paper-broker code</span>
+<h1 class="serif" style="margin: 0; font-size: 48px; line-height: 1">Backtests</h1>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<button class="btn" type="button">Compare runs</button>
+<button class="btn" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>Export trades</button>
+</div>
+</header>
+
+<section class="card" aria-label="New backtest" style="padding: 18px 20px; display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end">
+<div class="field"><label for="b-strat">Strategy</label><select id="b-strat"><option>dummy-v0</option></select></div>
+<div class="field"><label for="b-pair">Pair</label><select id="b-pair"><option>BTC/USDT</option><option>ETH/USDT</option><option>SOL/USDT</option></select></div>
+<div class="field" style="flex: 0 1 110px"><label for="b-tf">Timeframe</label><select id="b-tf"><option>5m</option><option>15m</option><option>1h</option><option>4h</option></select></div>
+<div class="field"><label for="b-from">From</label><input id="b-from" type="text" value="1 Jan 2026"></div>
+<div class="field"><label for="b-to">To</label><input id="b-to" type="text" value="30 Sep 2026"></div>
+<div class="field"><label for="b-cap">Starting capital</label><input id="b-cap" class="num" type="text" value="$10,000"></div>
+<div class="field" style="flex: 0 1 110px"><label for="b-fee">Fee</label><input id="b-fee" class="num" type="text" value="0.10%"></div>
+<div class="field" style="flex: 0 1 110px"><label for="b-slip">Slippage</label><input id="b-slip" class="num" type="text" value="2 bp"></div>
+<button class="btn btn-primary" type="button" style="flex: 0 0 auto"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"></path></svg>Run backtest</button>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px">
+<section class="card" aria-label="Runs" style="flex: 1 1 280px; min-width: 0; padding: 18px 10px; display: flex; flex-direction: column; gap: 4px">
+<div class="row" style="justify-content: space-between; padding: 0 8px 10px"><h2 style="margin: 0; font-size: 16px; font-weight: 600">Runs</h2><span class="muted num" style="font-size: 12px">24</span></div>
+<sc-for list="{{runs}}" as="r" hint-placeholder-count="5">
+<button class="run {{r.cls}}" type="button" aria-pressed="{{r.on}}" onClick="{{r.pick}}">
+<span class="row" style="justify-content: space-between; width: 100%"><span class="num muted" style="font-size: 12px">{{r.id}}</span><span class="num {{r.retCls}}" style="font-size: 14px">{{r.ret}}</span></span>
+<span style="font-size: 14px; font-weight: 500">{{r.title}}</span>
+<span class="muted" style="font-size: 12px">{{r.sub}}</span>
+</button>
+</sc-for>
+</section>
+
+<div style="flex: 4 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px">
+<div class="row" style="gap: 12px; flex-wrap: wrap"><h2 class="serif" style="margin: 0; font-size: 30px; font-weight: 400">{{sel.title}}</h2><span class="chip chip-done">COMPLETE</span></div>
+<span class="muted" style="font-size: 13px">{{sel.sub}} · ran in <span class="num">{{sel.time}}</span></span>
+</div>
+
+<section aria-label="Headline results" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 14px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+<div class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 8px">
+<span class="eyebrow">{{k.label}}</span>
+<span class="num {{k.cls}}" style="font-size: 26px; font-weight: 500">{{k.value}}</span>
+<span class="muted" style="font-size: 12px">{{k.note}}</span>
+</div>
+</sc-for>
+</section>
+
+<section class="card" aria-label="Equity and drawdown" style="padding: 22px 22px 14px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Equity</h2>
+<div class="row" style="gap: 18px; font-size: 12px">
+<span class="row" style="gap: 8px"><span style="width: 14px; height: 2px; border-radius: 1px; background: {{accent}}"></span>Strategy</span>
+<span class="row muted" style="gap: 8px"><span style="width: 14px; height: 2px; border-radius: 1px; background: #4F82E8"></span>BTC buy &amp; hold</span>
+</div>
+</div>
+<div class="seg" role="group" aria-label="Scale"><button type="button" class="on" aria-pressed="true">Linear</button><button type="button">Log</button></div>
+</div>
+<svg viewBox="0 0 880 222" width="100%" role="img" aria-label="Strategy equity from January to September 2026, ending at 11,840 dollars, ahead of BTC buy and hold at 11,210" style="display: block">
+<g stroke="#1A1F26"><line x1="56" x2="864" y1="29.1" y2="29.1"></line><line x1="56" x2="864" y1="62" y2="62"></line><line x1="56" x2="864" y1="94.9" y2="94.9"></line><line x1="56" x2="864" y1="127.7" y2="127.7"></line><line x1="56" x2="864" y1="160.6" y2="160.6"></line><line x1="56" x2="864" y1="200" y2="200" stroke="#262C35"></line></g>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11" fill="#7D848E" text-anchor="end"><text x="44" y="33.1">12.0k</text><text x="44" y="66">11.5k</text><text x="44" y="98.9">11.0k</text><text x="44" y="131.7">10.5k</text><text x="44" y="164.6">10.0k</text></g>
+<path d="{{eqArea}}" fill="{{accent}}" fill-opacity="0.07"></path>
+<path d="{{bhPath}}" fill="none" stroke="#4F82E8" stroke-width="1.5" stroke-opacity="0.85" stroke-linejoin="round"></path>
+<path d="{{eqPath}}" fill="none" stroke="{{accent}}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11" fill="#7D848E" text-anchor="middle"><text x="56" y="218" text-anchor="start">Jan</text><text x="148" y="218">Feb</text><text x="231" y="218">Mar</text><text x="323" y="218">Apr</text><text x="413" y="218">May</text><text x="505" y="218">Jun</text><text x="594" y="218">Jul</text><text x="686" y="218">Aug</text><text x="778" y="218">Sep</text></g>
+</svg>
+<div class="row" style="justify-content: space-between; margin-top: 6px"><h3 style="margin: 0; font-size: 13px; font-weight: 500" class="muted">Drawdown from peak</h3><span class="num down" style="font-size: 12px">Max −6.8% · 14 May</span></div>
+<svg viewBox="0 0 880 96" width="100%" role="img" aria-label="Drawdown from peak, deepest at minus 6.8 percent in mid May" style="display: block">
+<line x1="56" x2="864" y1="8" y2="8" stroke="#262C35"></line>
+<line x1="56" x2="864" y1="52" y2="52" stroke="#1A1F26"></line>
+<line x1="56" x2="864" y1="88" y2="88" stroke="#1A1F26"></line>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11" fill="#7D848E" text-anchor="end"><text x="44" y="12">0%</text><text x="44" y="56">−4%</text><text x="44" y="92">−7.3%</text></g>
+<path d="{{ddArea}}" fill="#E0604C" fill-opacity="0.22"></path>
+<path d="{{ddPath}}" fill="none" stroke="#E0604C" stroke-width="1.5" stroke-linejoin="round"></path>
+</svg>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px">
+<section class="card" aria-label="Monthly returns" style="flex: 3 1 420px; min-width: 0; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Monthly returns</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(64px, 1fr)); gap: 6px">
+<sc-for list="{{months}}" as="m" hint-placeholder-count="9">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 12px 10px; border-radius: 10px; background: {{m.bg}}">
+<span class="muted" style="font-size: 11px">{{m.name}}</span>
+<span class="num" style="font-size: 14px">{{m.value}}</span>
+</div>
+</sc-for>
+</div>
+<span class="muted" style="font-size: 12px">Green tint = gain, red tint = loss; stronger tint = bigger move. Values are always shown.</span>
+</section>
+
+<section class="card" aria-label="Trade return distribution" style="flex: 2 1 320px; min-width: 0; padding: 22px 22px 12px; display: flex; flex-direction: column; gap: 10px">
+<div class="row" style="justify-content: space-between"><h2 style="margin: 0; font-size: 16px; font-weight: 600">Return per trade</h2><span class="muted num" style="font-size: 12px">412 trades</span></div>
+<svg viewBox="0 0 420 170" width="100%" role="img" aria-label="Histogram of per-trade returns between minus 3 and plus 3 percent, centred slightly above zero" style="display: block">
+<line x1="10" x2="410" y1="146" y2="146" stroke="#262C35"></line>
+<line x1="210" x2="210" y1="10" y2="146" stroke="#3A414C" stroke-dasharray="3 3"></line>
+<path d="{{histDown}}" fill="#E0604C"></path>
+<path d="{{histUp}}" fill="#2FA77C"></path>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11" fill="#7D848E" text-anchor="middle"><text x="10" y="164" text-anchor="start">−3%</text><text x="110" y="164">−1.5%</text><text x="210" y="164">0</text><text x="310" y="164">+1.5%</text><text x="410" y="164" text-anchor="end">+3%</text></g>
+</svg>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px">
+<section class="card" aria-label="Detailed statistics" style="flex: 3 1 420px; min-width: 0; padding: 18px 6px 6px; display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; padding: 0 16px 6px; font-size: 16px; font-weight: 600">Statistics</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr))">
+<table class="t"><tbody>
+<sc-for list="{{statsA}}" as="s" hint-placeholder-count="5"><tr><td class="muted">{{s.k}}</td><td class="r num {{s.cls}}">{{s.v}}</td></tr></sc-for>
+</tbody></table>
+<table class="t"><tbody>
+<sc-for list="{{statsB}}" as="s" hint-placeholder-count="5"><tr><td class="muted">{{s.k}}</td><td class="r num {{s.cls}}">{{s.v}}</td></tr></sc-for>
+</tbody></table>
+</div>
+</section>
+
+<section class="card" aria-label="Assumptions" style="flex: 2 1 320px; min-width: 0; padding: 22px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Assumptions</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.5; color: #A3A9B2">
+<li>Market orders fill at the next candle’s open plus 2 bp slippage.</li>
+<li>Limit orders fill only when price trades through them.</li>
+<li>Fees 0.10% per fill, taken from the trade’s value.</li>
+<li>Risk limits enforced exactly as in live: 3 orders were rejected.</li>
+<li>3 gaps in candle data (total 40 min) were skipped, not filled.</li>
+</ul>
+<p class="muted" style="margin: 0; font-size: 12px; line-height: 1.5">Past results don’t predict live performance. Run on testnet before trusting a strategy.</p>
+</section>
+</div>
+</div>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#B5873A","options":["#B5873A","#C08A5B","#8E9BB0"]},"$preview":{"width":1440,"height":1760}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { run: 0 }; }
+  renderVals() {
+    const accent = this.props.accent ?? '#B5873A';
+    const rng = (seed) => { let s = seed; return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; };
+    const walk = (n, a, b, vol, seed) => {
+      const r = rng(seed); const out = []; let v = a;
+      for (let i = 0; i < n; i++) { const target = a + (b - a) * (i / (n - 1)); v += (r() - 0.5) * vol; v += (target - v) * 0.08; out.push(v); }
+      out[0] = a; out[n - 1] = b; return out;
+    };
+    const N = 137, X0 = 56, X1 = 864;
+    const px = (i) => X0 + i * (X1 - X0) / (N - 1);
+    const py = (v) => 200 - (v - 9400) / 2800 * 184;
+    const eq = walk(N, 10000, 11840, 150, 31);
+    const bh = walk(N, 10000, 11210, 260, 57);
+    const line = (s, f) => s.map((v, i) => (i ? 'L' : 'M') + px(i).toFixed(1) + ' ' + f(v).toFixed(1)).join(' ');
+    const eqPath = line(eq, py);
+
+    let peak = -Infinity; const dd = eq.map((v) => { peak = Math.max(peak, v); return v / peak - 1; });
+    const minDD = Math.min(...dd) || -0.01;
+    const ddScaled = dd.map((d) => d * (-0.068 / minDD));
+    const dy = (d) => 8 + (-d) / 0.073 * 80;
+    const ddPath = line(ddScaled, dy);
+
+    const bins = 24, bw = 400 / bins;
+    let histUp = '', histDown = '';
+    for (let b = 0; b < bins; b++) {
+      const c = -3 + (b + 0.5) * 0.25;
+      const count = Math.round(52 * Math.exp(-Math.pow((c - 0.12) / 0.95, 2))) + (Math.abs(c) > 2.5 ? 1 : 0);
+      const h = Math.max(2, count * 2.4), x = 10 + b * bw + 1, w = bw - 2, t = 145 - h, r = 2.5;
+      const p = `M${x} 145 V${t + r} Q${x} ${t} ${x + r} ${t} H${x + w - r} Q${x + w} ${t} ${x + w} ${t + r} V145 Z `;
+      if (c > 0) histUp += p; else histDown += p;
+    }
+
+    const monthVals = [['Jan', 2.4], ['Feb', -1.8], ['Mar', 4.1], ['Apr', 0.6], ['May', -2.9], ['Jun', 3.7], ['Jul', 5.2], ['Aug', -0.4], ['Sep', 6.1]];
+    const months = monthVals.map(([name, v]) => {
+      const a = (0.10 + Math.min(Math.abs(v), 6.5) / 6.5 * 0.42).toFixed(2);
+      return { name, value: (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1) + '%', bg: v >= 0 ? `rgba(47,167,124,${a})` : `rgba(224,96,76,${a})` };
+    });
+
+    const runDefs = [
+      { id: '#24', title: 'BTC/USDT · 5m', sub: 'dummy-v0 · Jan–Sep 2026 · fee 0.10%', ret: '+18.4%', retCls: 'up', time: '2m 41s' },
+      { id: '#23', title: 'ETH/USDT · 5m', sub: 'dummy-v0 · Jan–Sep 2026 · fee 0.10%', ret: '+9.7%', retCls: 'up', time: '2m 38s' },
+      { id: '#22', title: 'BTC/USDT · 1h', sub: 'dummy-v0 · Jan–Sep 2026 · fee 0.10%', ret: '−2.3%', retCls: 'down', time: '14s' },
+      { id: '#21', title: 'BTC/USDT · 5m', sub: 'dummy-v0 · Jan–Sep 2026 · fee 0.075%', ret: '+20.1%', retCls: 'up', time: '2m 44s' },
+      { id: '#20', title: 'SOL/USDT · 15m', sub: 'dummy-v0 · Apr–Sep 2026 · fee 0.10%', ret: '+4.2%', retCls: 'up', time: '51s' }
+    ];
+    const sel = this.state.run;
+    const runs = runDefs.map((r, i) => ({ ...r, cls: i === sel ? 'on' : '', on: i === sel ? 'true' : 'false', pick: () => this.setState({ run: i }) }));
+
+    return {
+      accent, eqPath, bhPath: line(bh, py),
+      eqArea: eqPath + ` L${X1} 200 L${X0} 200 Z`,
+      ddPath, ddArea: ddPath + ` L${X1} 8 L${X0} 8 Z`,
+      histUp, histDown, months, runs,
+      sel: runDefs[sel],
+      kpis: [
+        { label: 'Total return', value: '+18.4%', cls: 'up', note: '$10,000 → $11,840' },
+        { label: 'vs BTC hold', value: '+6.3 pts', cls: 'up', note: 'hold returned +12.1%' },
+        { label: 'Max drawdown', value: '−6.8%', cls: '', note: 'recovered in 23 days' },
+        { label: 'Sharpe', value: '1.42', cls: '', note: 'annualised, daily returns' },
+        { label: 'Win rate', value: '54.6%', cls: '', note: '225 of 412 trades' },
+        { label: 'Profit factor', value: '1.38', cls: '', note: 'gross win ÷ gross loss' }
+      ],
+      statsA: [
+        { k: 'CAGR', v: '+25.3%', cls: 'up' },
+        { k: 'Average trade', v: '+$4.47', cls: 'up' },
+        { k: 'Best trade', v: '+$96.20', cls: 'up' },
+        { k: 'Worst trade', v: '−$71.45', cls: 'down' },
+        { k: 'Longest losing streak', v: '7 trades', cls: '' }
+      ],
+      statsB: [
+        { k: 'Average hold', v: '52m', cls: '' },
+        { k: 'Time in market', v: '38%', cls: '' },
+        { k: 'Fees paid', v: '$412.60', cls: '' },
+        { k: 'Sortino', v: '2.05', cls: '' },
+        { k: 'Orders rejected by risk', v: '3', cls: '' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

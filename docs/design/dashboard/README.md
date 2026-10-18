@@ -16,6 +16,7 @@ code to ship. **All numbers in them are sample data.**
 | `Trades.dc.html` | Live trading: candles with our fills, entry/TP/stop lines, order book, open orders, strategy signal, today's fills |
 | `History.dc.html` | Trade history: filters, CSV export, summary stats, paginated closed-trade table |
 | `Risk.dc.html` | Risk & system: pause/flatten/kill with confirmation, risk limits, system health, event & audit log |
+| `Backtest.dc.html` | Backtests: run form, past runs, headline results, equity vs BTC hold with a separate drawdown chart, monthly returns, per-trade return histogram, statistics, assumptions (desktop only) |
 | `Mobile-*.dc.html` | Phone versions (390×844) of the same four areas, with a bottom tab bar |
 
 The rules for building new screens are in `../DESIGN_SYSTEM.md`, and the tokens are in
