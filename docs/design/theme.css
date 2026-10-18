@@ -1,0 +1,178 @@
+/*
+ * trading-bot dashboard theme: "Obsidian & Champagne".
+ * Single source of truth for colours, type, spacing and base components.
+ * Rules for using it: docs/design/DESIGN_SYSTEM.md. Change a value here, not in a page.
+ *
+ * Fonts (load once per page):
+ * <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif&display=swap" rel="stylesheet">
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg: #0A0C0F;            /* page */
+  --surface: #111418;       /* cards */
+  --surface-raised: #151920;/* buttons, inputs on cards */
+  --surface-sunken: #0D1013;/* segmented controls, inputs, tooltips */
+  --hover: #13171C;
+  --selected: #1C2129;
+
+  /* Lines */
+  --line: #1E232B;          /* card borders, table header rule */
+  --line-soft: #171B21;     /* table row dividers */
+  --line-strong: #2A313B;   /* button borders */
+  --grid: #1A1F26;          /* chart gridlines */
+  --baseline: #262C35;      /* chart zero/baseline */
+
+  /* Text */
+  --text: #ECE9E2;
+  --text-2: #A3A9B2;        /* nav, secondary labels */
+  --text-muted: #8A919B;    /* captions; 6:1 on --surface */
+  --text-faint: #7D848E;    /* axis labels, table headers; 5:1 on --surface. Never lighter. */
+
+  /* Brand accent */
+  --accent: #B5873A;        /* marks: equity line, logo ring */
+  --accent-text: #D4AE6C;   /* links, active tab, mode badge text */
+  --accent-hover: #E9C98F;
+  --accent-tint: rgba(181, 135, 58, 0.08);
+  --accent-border: rgba(212, 174, 108, 0.45);
+
+  /* Data series (validated for colour-blind separation on --surface) */
+  --series-1: var(--accent);/* our bot */
+  --series-2: #4F82E8;      /* benchmark / reference, take-profit */
+
+  /* Profit & loss: always paired with a +/− sign or arrow */
+  --up: #2FA77C;            /* marks: candles, bars, buy markers */
+  --down: #E0604C;          /* marks: candles, bars, sell markers */
+  --up-text: #4CC495;
+  --down-text: #EE7B68;
+  --up-tint: rgba(47, 167, 124, 0.14);
+  --down-tint: rgba(224, 96, 76, 0.14);
+
+  /* Status (reserved: never reuse as a series colour) */
+  --ok: #2FA77C;
+  --warn: #D9A441;
+  --danger: #E0604C;
+  --danger-text: #F29A89;
+  --danger-bg: #1A1210;
+  --danger-border: #5A2A24;
+  --danger-solid: #9E3B2F;  /* confirm buttons, white text */
+
+  /* Type */
+  --font-display: 'Instrument Serif', ui-serif, Georgia, serif;
+  --font-ui: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --fs-display: 48px;       /* page title (36px on phone) */
+  --fs-hero: 30px;          /* KPI value (20px on phone) */
+  --fs-h2: 16px;            /* card title (15px on phone) */
+  --fs-body: 13px;
+  --fs-small: 12px;
+  --fs-eyebrow: 11px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --gap-tiles: 14px;        /* between KPI tiles */
+  --gap-cards: 18px;        /* between cards */
+  --gap-sections: 24px;     /* between page sections */
+  --pad-card: 22px;         /* 16px on phone */
+
+  /* Shape */
+  --radius-card: 16px;      /* 18px on phone */
+  --radius-control: 10px;
+  --radius-chip: 6px;
+  --hit: 44px;              /* minimum touch target */
+}
+
+/* ---------- Base ---------- */
+body { margin: 0; background: var(--bg); }
+.app { font-family: var(--font-ui); color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent-text); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.serif { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; }
+.eyebrow { font-size: var(--fs-eyebrow); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+.muted { color: var(--text-muted); }
+.up { color: var(--up-text); }
+.down { color: var(--down-text); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* Page glow: the one decorative effect. Use on <main> only. */
+.page-glow { background: radial-gradient(900px 360px at 75% -120px, rgba(181, 135, 58, 0.07), transparent 70%), var(--bg); }
+
+/* ---------- Containers ---------- */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03); }
+.card--feature { border-color: #2C2619; }      /* the one card per page that matters most */
+.card--danger { border-color: #3A1F1B; }
+
+/* ---------- Buttons ---------- */
+.btn { font: inherit; font-size: var(--fs-body); font-weight: 500; min-height: var(--hit); padding: 0 16px; border-radius: var(--radius-control); border: 1px solid var(--line-strong); background: var(--surface-raised); color: var(--text); display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+.btn:hover { background: #1A1F27; }
+.btn:focus-visible, .seg button:focus-visible, .switch:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.btn--danger { border-color: var(--danger-border); color: var(--danger-text); background: var(--danger-bg); }
+.btn--danger:hover { background: #221613; }
+.btn--danger-solid { border-color: #B8483A; background: var(--danger-solid); color: #FFF4F1; }
+.btn--danger-solid:hover { background: #B04234; }
+.btn--sm { min-height: 32px; padding: 0 12px; font-size: var(--fs-small); } /* only inside table rows on desktop */
+
+/* Segmented control: ranges, timeframes, tabs */
+.seg { display: inline-flex; padding: 3px; border-radius: var(--radius-control); background: var(--surface-sunken); border: 1px solid var(--line); gap: 2px; }
+.seg button { font: inherit; font-size: var(--fs-small); font-weight: 500; color: var(--text-muted); background: transparent; border: 0; border-radius: 7px; min-height: 30px; padding: 0 10px; cursor: pointer; }
+.seg button.on, .seg button[aria-pressed="true"], .seg button[aria-selected="true"] { background: var(--selected); color: var(--text); }
+
+/* Switch */
+.switch { position: relative; width: 44px; height: 26px; border-radius: 13px; border: 1px solid var(--line-strong); background: #1A1F27; cursor: pointer; padding: 0; flex: none; }
+.switch span { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--text-muted); }
+.switch[aria-checked="true"] { background: #3A2F1A; border-color: #7A6236; }
+.switch[aria-checked="true"] span { left: 21px; background: var(--accent-text); }
+
+/* Form fields */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: var(--fs-eyebrow); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+.field input, .field select { font: inherit; font-size: var(--fs-body); color: var(--text); background: var(--surface-sunken); border: 1px solid #232A33; border-radius: var(--radius-control); min-height: var(--hit); padding: 0 12px; box-sizing: border-box; width: 100%; }
+
+/* ---------- Labels ---------- */
+.chip { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; padding: 3px 8px; border-radius: var(--radius-chip); }
+.chip--buy { background: var(--up-tint); color: #5CCF9F; }
+.chip--sell { background: var(--down-tint); color: #F08A78; }
+.chip--mode { border: 1px solid var(--accent-border); color: var(--accent-text); background: var(--accent-tint); }
+
+.status-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--ok); }
+.status-dot--live { box-shadow: 0 0 0 4px rgba(47, 167, 124, 0.16); }
+.status-dot--warn { background: var(--warn); }
+.status-dot--down { background: var(--danger); }
+
+/* ---------- Data ---------- */
+table.t { width: 100%; border-collapse: collapse; font-size: var(--fs-body); }
+.t th { font-size: var(--fs-eyebrow); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); font-weight: 500; text-align: left; padding: 0 16px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.t td { padding: 14px 16px; border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
+.t tbody tr:hover td { background: var(--hover); }
+.t tr:last-child td { border-bottom: 0; }
+.t .r { text-align: right; }
+.table-scroll { overflow-x: auto; }
+
+.meter { height: 6px; border-radius: 3px; background: #1C2128; overflow: hidden; }
+.meter > div { height: 100%; border-radius: 3px; background: var(--text-muted); }
+.meter--warn > div { background: var(--warn); }   /* >= 80% of a limit */
+.meter--over > div { background: var(--danger); } /* limit hit */
+
+/* ---------- Navigation ---------- */
+.nav-item { display: flex; align-items: center; gap: 12px; min-height: var(--hit); padding: 0 12px; border-radius: var(--radius-control); color: var(--text-2); font-size: 14px; }
+.nav-item:hover { background: var(--hover); color: var(--text); }
+.nav-item[aria-current="page"] { background: #151A20; color: var(--text); box-shadow: inset 0 0 0 1px #232A33; }
+.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 56px; font-size: 11px; font-weight: 500; color: var(--text-faint); }
+.tab-item[aria-current="page"] { color: var(--accent-text); }
+
+/* ---------- Layout ---------- */
+.shell { min-height: 100vh; display: flex; flex-wrap: wrap; }
+.shell > aside { flex: 1 1 232px; box-sizing: border-box; padding: 28px 18px; border-right: 1px solid #161A20; display: flex; flex-direction: column; gap: 32px; }
+.shell > main { flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 36px clamp(16px, 3vw, 44px) 56px; display: flex; flex-direction: column; gap: var(--gap-sections); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: var(--gap-tiles); }
+.card-row { display: flex; flex-wrap: wrap; gap: var(--gap-cards); }
+.card-row > .wide { flex: 2 1 560px; min-width: 0; }
+.card-row > .narrow { flex: 1 1 340px; min-width: 0; }

@@ -18,6 +18,9 @@ code to ship. **All numbers in them are sample data.**
 | `Risk.dc.html` | Risk & system: pause/flatten/kill with confirmation, risk limits, system health, event & audit log |
 | `Mobile-*.dc.html` | Phone versions (390×844) of the same four areas, with a bottom tab bar |
 
+The rules for building new screens are in `../DESIGN_SYSTEM.md`, and the tokens are in
+`../theme.css`. Those files are authoritative; the table below is a summary.
+
 ## Design tokens ("Obsidian & Champagne")
 
 | Token | Value | Use |

@@ -42,6 +42,16 @@ CI runs the same checks on every PR.
 - Any change touching order placement, position sizing, or risk limits must be called out
   explicitly in the PR description under "Risk to live trading".
 
+## Dashboard design system (mandatory for any UI work)
+- Before building or changing any dashboard screen or component, read
+  `docs/design/DESIGN_SYSTEM.md` and follow it.
+- Style with the variables and classes in `docs/design/theme.css`. Don't hardcode colours,
+  fonts or spacing, or restyle an existing component one-off.
+- Match the reference mockups in `docs/design/dashboard/` (desktop and mobile).
+- If you need something the design system doesn't cover, add it to `theme.css` and
+  `DESIGN_SYSTEM.md` in the same PR and mention it in the PR description.
+- Run the checklist at the end of `DESIGN_SYSTEM.md` before opening a UI PR.
+
 ## Architecture
 _(Not built yet. As modules and interfaces are decided, document them here in the same PR
 that introduces them, so the other developer's Claude knows about them.)_
