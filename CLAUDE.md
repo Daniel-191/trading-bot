@@ -58,3 +58,7 @@ that introduces them, so the other developer's Claude knows about them.)_
 
 ## Decisions log
 _(Record important design decisions here with a one-line rationale.)_
+- **Bitcoin only.** The bot trades a single BTC pair, set by `TRADING_PAIR` (not hardcoded).
+  Don't build multi-coin features (screening, rankings, coin lists) without both developers agreeing.
+- **No CoinMarketCap (or other aggregator) dependency.** With BTC only, the exchange's free
+  WebSocket/REST data via CCXT covers everything; aggregators add cost and a failure point for nothing.
