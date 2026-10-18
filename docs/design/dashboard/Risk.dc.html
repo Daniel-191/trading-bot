@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Risk and system · Trading bot</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#D4AE6C;text-decoration:none}a:hover{color:#E9C98F}
+.app{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;color:#ECE9E2;background:#0A0C0F;-webkit-font-smoothing:antialiased}
+.num{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.serif{font-family:'Instrument Serif',ui-serif,Georgia,serif;font-weight:400;letter-spacing:-0.01em}
+.card{background:#111418;border:1px solid #1E232B;border-radius:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.03)}
+.eyebrow{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8A919B;font-weight:500}
+.muted{color:#8A919B}
+.up{color:#4CC495}.down{color:#EE7B68}.gold{color:#D4AE6C}
+.nav{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;color:#A3A9B2;font-size:14px}
+.nav:hover{background:#13171C;color:#ECE9E2}
+.nav.on{background:#151A20;color:#ECE9E2;box-shadow:inset 0 0 0 1px #232A33}
+.btn{font:inherit;font-size:13px;font-weight:500;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #2A313B;background:#151920;color:#ECE9E2;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.btn:hover{background:#1A1F27}
+.btn-danger{border-color:#5A2A24;color:#F29A89;background:#1A1210}
+.btn-danger:hover{background:#221613}
+.btn-solid-danger{border-color:#B8483A;background:#9E3B2F;color:#FFF4F1}
+.btn-solid-danger:hover{background:#B04234}
+.seg{display:inline-flex;padding:3px;border-radius:10px;background:#0D1013;border:1px solid #1E232B;gap:2px;flex-wrap:wrap}
+.seg button{font:inherit;font-size:12px;font-weight:500;color:#8A919B;background:transparent;border:0;border-radius:7px;min-height:30px;padding:0 10px;cursor:pointer}
+.seg button.on{background:#1C2129;color:#ECE9E2}
+.chip{display:inline-flex;align-items:center;font-size:11px;font-weight:600;letter-spacing:0.06em;padding:3px 8px;border-radius:6px}
+.chip-mode{border:1px solid rgba(212,174,108,0.45);color:#D4AE6C;background:rgba(181,135,58,0.08)}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+.t th{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#7D848E;font-weight:500;text-align:left;padding:0 16px 12px;border-bottom:1px solid #1E232B;white-space:nowrap}
+.t td{padding:14px 16px;border-bottom:1px solid #171B21;white-space:nowrap}
+.t tr:last-child td{border-bottom:0}
+.t .r{text-align:right}
+.meter{height:6px;border-radius:3px;background:#1C2128;overflow:hidden}
+.pulse{width:8px;height:8px;border-radius:50%;background:#2FA77C;box-shadow:0 0 0 4px rgba(47,167,124,0.16);flex:none}
+.row{display:flex;align-items:center;gap:12px}
+.switch{position:relative;width:44px;height:26px;border-radius:13px;border:1px solid #2A313B;background:#1A1F27;cursor:pointer;padding:0;flex:none}
+.switch span{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#8A919B}
+.switch.on{background:#3A2F1A;border-color:#7A6236}
+.switch.on span{left:21px;background:#D4AE6C}
+</style>
+</helmet>
+<div class="app" style="min-height: 100vh; display: flex; flex-wrap: wrap">
+
+<aside style="flex: 1 1 232px; box-sizing: border-box; padding: 28px 18px; border-right: 1px solid #161A20; display: flex; flex-direction: column; gap: 32px; background: #0A0C0F">
+<div class="row" style="padding: 0 8px; gap: 10px">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12.5" fill="none" stroke="{{accent}}" stroke-width="1.5"></circle><path d="M8 18 L12.5 13 L15.5 15.5 L20 9.5" fill="none" stroke="#ECE9E2" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<div style="display: flex; flex-direction: column">
+<span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">trading-bot</span>
+<span class="muted" style="font-size: 12px">Control room</span>
+</div>
+</div>
+<nav aria-label="Main" style="display: flex; flex-direction: column; gap: 4px">
+<a class="nav" href="Main.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"></rect></svg>Overview</a>
+<a class="nav" href="Trades.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"></path></svg>Live trading<span class="pulse" style="margin-left: auto"></span></a>
+<a class="nav" href="History.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>Trade history</a>
+<a class="nav on" href="Risk.dc.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.5-3.2 8-7.5 9.5-4.3-1.5-7.5-5-7.5-9.5V6z"></path></svg>Risk &amp; system</a>
+</nav>
+<div class="card" style="margin-top: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; border-radius: 12px">
+<div class="row" style="justify-content: space-between"><span class="eyebrow">Mode</span><span class="chip chip-mode">PAPER</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Exchange</span><span>Binance</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Strategy</span><span class="num">dummy-v0</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Version</span><span class="num">0.1.0</span></div>
+<p class="muted" style="margin: 4px 0 0; font-size: 12px; line-height: 1.5">Simulated fills from live prices. No real funds at risk.</p>
+</div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 36px clamp(16px, 3vw, 44px) 56px; display: flex; flex-direction: column; gap: 24px; background: radial-gradient(900px 360px at 75% -120px, rgba(181,135,58,0.07), transparent 70%), #0A0C0F">
+
+<header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="eyebrow">Controls go through the same interface as Telegram</span>
+<h1 class="serif" style="margin: 0; font-size: 48px; line-height: 1">Risk &amp; system</h1>
+</div>
+<div class="card" style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px; padding: 0 16px; min-height: 44px; border-radius: 12px; font-size: 13px">
+<span class="row" style="gap: 8px"><span class="pulse"></span>{{engineLabel}}</span>
+<span class="muted">Kill switch <span style="color: #ECE9E2">armed</span></span>
+</div>
+</header>
+
+<section aria-label="Controls" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 14px">
+<div class="card" style="padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<div class="row" style="justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 6px"><h2 style="margin: 0; font-size: 16px; font-weight: 600">Pause new entries</h2><p class="muted" style="margin: 0; font-size: 13px; line-height: 1.5">Stops opening positions. Open positions, stops and take-profits keep working.</p></div>
+<button class="switch {{pauseCls}}" type="button" role="switch" aria-checked="{{paused}}" aria-label="Pause new entries" onClick="{{togglePause}}"><span></span></button>
+</div>
+<span class="num muted" style="font-size: 12px; margin-top: auto">{{pauseNote}}</span>
+</div>
+<div class="card" style="padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 6px"><h2 style="margin: 0; font-size: 16px; font-weight: 600">Flatten all</h2><p class="muted" style="margin: 0; font-size: 13px; line-height: 1.5">Cancels 2 open orders and market-closes 3 positions (≈ $2,944). The engine keeps running.</p></div>
+<button class="btn btn-danger" type="button" style="margin-top: auto" onClick="{{askFlatten}}">Flatten all…</button>
+</div>
+<div class="card" style="padding: 22px; display: flex; flex-direction: column; gap: 14px; border-color: #3A1F1B">
+<div style="display: flex; flex-direction: column; gap: 6px"><h2 style="margin: 0; font-size: 16px; font-weight: 600">Kill engine</h2><p class="muted" style="margin: 0; font-size: 13px; line-height: 1.5">Flattens everything, then stops the engine. Restart needs shell access to the server.</p></div>
+<button class="btn btn-danger" type="button" style="margin-top: auto" onClick="{{askKill}}">Kill engine…</button>
+</div>
+</section>
+
+<sc-if value="{{confirming}}" hint-placeholder-val="{{ false }}">
+<section class="card" role="alertdialog" aria-labelledby="confirm-title" style="padding: 22px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; border-color: #7A3328; background: #160F0E">
+<div style="display: flex; flex-direction: column; gap: 6px; flex: 1 1 320px">
+<h2 id="confirm-title" style="margin: 0; font-size: 16px; font-weight: 600; color: #F7B4A6">{{confirmTitle}}</h2>
+<p style="margin: 0; font-size: 13px; line-height: 1.5; color: #C9B5B0">{{confirmBody}} This is written to the audit log with your name.</p>
+</div>
+<div class="row" style="flex-wrap: wrap; gap: 10px">
+<button class="btn" type="button" onClick="{{cancel}}">Cancel</button>
+<button class="btn btn-solid-danger" type="button" onClick="{{confirm}}">{{confirmCta}}</button>
+</div>
+</section>
+</sc-if>
+
+<section class="card" aria-label="Risk limits" style="padding: 22px 6px 10px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; padding: 0 16px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Risk limits</h2>
+<span class="muted" style="font-size: 12px">Read-only here · set by environment variables, applied on restart</span>
+</div>
+<div style="overflow-x: auto">
+<table class="t">
+<thead><tr><th>Limit</th><th>Setting</th><th class="r">Limit</th><th class="r">Now</th><th style="width: 28%">Used</th><th>Status</th></tr></thead>
+<tbody>
+<sc-for list="{{limits}}" as="l" hint-placeholder-count="6">
+<tr>
+<td style="font-weight: 500">{{l.name}}</td>
+<td class="num muted" style="font-size: 12px">{{l.env}}</td>
+<td class="r num muted">{{l.max}}</td>
+<td class="r num">{{l.now}}</td>
+<td><div class="meter"><div style="width: {{l.w}}; height: 100%; border-radius: 3px; background: #8A919B"></div></div></td>
+<td><span class="row" style="gap: 6px; font-size: 12px; color: #5CCF9F"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>OK</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px">
+<section class="card" aria-label="System health" style="flex: 1 1 360px; min-width: 0; padding: 22px; display: flex; flex-direction: column; gap: 4px">
+<h2 style="margin: 0 0 10px; font-size: 16px; font-weight: 600">System health</h2>
+<sc-for list="{{health}}" as="h" hint-placeholder-count="7">
+<div style="display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 11px 0; border-bottom: 1px solid #171B21; font-size: 13px">
+<span style="width: 8px; height: 8px; border-radius: 50%; background: {{h.dot}}"></span>
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span>{{h.name}}</span><span class="muted" style="font-size: 12px">{{h.sub}}</span></span>
+<span class="num" style="text-align: right">{{h.value}}</span>
+</div>
+</sc-for>
+</section>
+
+<section class="card" aria-label="Events and audit log" style="flex: 2 1 560px; min-width: 0; padding: 22px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Events &amp; audit log</h2>
+<div class="seg" role="group" aria-label="Filter events">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="5"><button type="button" class="{{f.cls}}" aria-pressed="{{f.on}}" onClick="{{f.pick}}">{{f.label}}</button></sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column">
+<sc-for list="{{events}}" as="e" hint-placeholder-count="9">
+<div style="display: grid; grid-template-columns: 64px 18px 76px minmax(0, 1fr); gap: 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid #171B21; font-size: 13px; line-height: 1.45">
+<span class="num muted" style="font-size: 12px">{{e.time}}</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{e.color}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-top: 1px"><path d="{{e.icon}}"></path></svg>
+<span class="eyebrow" style="font-size: 10px; padding-top: 3px">{{e.kind}}</span>
+<span><span>{{e.title}}</span> <span class="muted">{{e.detail}}</span></span>
+</div>
+</sc-for>
+</div>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#B5873A","options":["#B5873A","#C08A5B","#8E9BB0"]},"$preview":{"width":1440,"height":1460}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { paused: false, confirming: null, filter: 'All' }; }
+  renderVals() {
+    const accent = this.props.accent ?? '#B5873A';
+    const { paused, confirming, filter } = this.state;
+    const ok = 'M5 12.5l4.5 4.5L19 7.5';
+    const warn = 'M12 4l9 16H3zM12 10v4M12 17.5v.01';
+    const risk = 'M12 3l7.5 3v5.5c0 4.5-3.2 8-7.5 9.5-4.3-1.5-7.5-5-7.5-9.5V6zM12 9v4M12 16v.01';
+    const info = 'M12 3.5a8.5 8.5 0 1 0 0 17a8.5 8.5 0 1 0 0-17zM12 11v5M12 8v.01';
+    const user = 'M12 12a4 4 0 1 0 0-8a4 4 0 1 0 0 8zM4.5 20.5c1-3.5 4-5 7.5-5s6.5 1.5 7.5 5';
+    const all = [
+      { time: '19:32:41', kind: 'Fill', title: 'Filled', detail: 'SELL 0.0150 BTC/USDT @ 67,412.50 · +$18.24', color: '#4CC495', icon: ok },
+      { time: '19:31:07', kind: 'Fill', title: 'Filled', detail: 'BUY 0.420 ETH/USDT @ 2,618.90', color: '#4CC495', icon: ok },
+      { time: '19:28:55', kind: 'Fill', title: 'Filled', detail: 'BUY 6.50 SOL/USDT @ 154.32 (maker)', color: '#4CC495', icon: ok },
+      { time: '19:12:18', kind: 'System', title: 'Reconnected', detail: 'Binance WebSocket back after 4.2 s · candles backfilled', color: '#D9A441', icon: warn },
+      { time: '18:40:02', kind: 'Risk', title: 'Order rejected', detail: 'SOL/USDT buy would exceed max position size (20%)', color: '#EE7B68', icon: risk },
+      { time: '16:05:44', kind: 'Control', title: 'Entries resumed', detail: 'by Daniel via Telegram /resume', color: '#D4AE6C', icon: user },
+      { time: '15:51:10', kind: 'Control', title: 'Entries paused', detail: 'by Daniel via dashboard', color: '#D4AE6C', icon: user },
+      { time: '08:00:00', kind: 'System', title: 'Daily summary', detail: 'sent to Telegram · 2 recipients', color: '#8A919B', icon: info },
+      { time: '03:14:27', kind: 'System', title: 'Engine started', detail: 'v0.1.0 · mode paper · reconciled 0 orders', color: '#8A919B', icon: info }
+    ];
+    const kinds = ['All', 'Fill', 'Risk', 'System', 'Control'];
+    const labels = { All: 'All', Fill: 'Fills', Risk: 'Risk', System: 'System', Control: 'Control' };
+    const prompts = {
+      flatten: { t: 'Flatten all positions?', b: 'Cancels 2 open orders and closes 3 positions at market.', c: 'Flatten now' },
+      kill: { t: 'Kill the engine?', b: 'Flattens everything, then stops the engine until someone restarts it on the server.', c: 'Kill engine' }
+    };
+    const p = confirming ? prompts[confirming] : null;
+    return {
+      accent,
+      paused: paused ? 'true' : 'false',
+      pauseCls: paused ? 'on' : '',
+      pauseNote: paused ? 'Paused just now · no new entries' : 'Accepting new entries',
+      engineLabel: paused ? 'Running · entries paused' : 'Running',
+      togglePause: () => this.setState({ paused: !paused }),
+      askFlatten: () => this.setState({ confirming: 'flatten' }),
+      askKill: () => this.setState({ confirming: 'kill' }),
+      cancel: () => this.setState({ confirming: null }),
+      confirm: () => this.setState({ confirming: null }),
+      confirming: !!p,
+      confirmTitle: p ? p.t : '', confirmBody: p ? p.b : '', confirmCta: p ? p.c : '',
+      limits: [
+        { name: 'Daily loss', env: 'RISK_DAILY_LOSS_LIMIT_PCT', max: '3.0%', now: '0.0%', w: '0%' },
+        { name: 'Max drawdown', env: 'RISK_MAX_DRAWDOWN_PCT', max: '10.0%', now: '3.1%', w: '31%' },
+        { name: 'Position size', env: 'RISK_MAX_POSITION_PCT', max: '20.0%', now: '10.6%', w: '53%' },
+        { name: 'Total exposure', env: 'RISK_MAX_EXPOSURE_PCT', max: '50.0%', now: '28.1%', w: '56%' },
+        { name: 'Open orders', env: 'RISK_MAX_OPEN_ORDERS', max: '10', now: '2', w: '20%' },
+        { name: 'Orders per minute', env: 'RISK_MAX_ORDERS_PER_MIN', max: '6', now: '1', w: '17%' }
+      ],
+      health: [
+        { name: 'Engine', sub: 'Heartbeat every 5 s', value: '2s ago', dot: '#2FA77C' },
+        { name: 'Binance WebSocket', sub: '1 reconnect today', value: '38 ms', dot: '#2FA77C' },
+        { name: 'Binance REST weight', sub: 'per minute', value: '312 / 6,000', dot: '#2FA77C' },
+        { name: 'Database', sub: 'SQLite · 41 MB', value: 'OK', dot: '#2FA77C' },
+        { name: 'Telegram bot', sub: '2 allowed users', value: 'Connected', dot: '#2FA77C' },
+        { name: 'Healthchecks.io', sub: 'Dead-man’s switch', value: '19:33', dot: '#2FA77C' },
+        { name: 'Sentry', sub: 'Errors, last 24 h', value: '0', dot: '#2FA77C' }
+      ],
+      filters: kinds.map((k) => ({ label: labels[k], cls: k === filter ? 'on' : '', on: k === filter ? 'true' : 'false', pick: () => this.setState({ filter: k }) })),
+      events: filter === 'All' ? all : all.filter((e) => e.kind === filter)
+    };
+  }
+}
+</script>
+</body>
+</html>

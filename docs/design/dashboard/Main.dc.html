@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Overview · Trading bot</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#D4AE6C;text-decoration:none}a:hover{color:#E9C98F}
+.app{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;color:#ECE9E2;background:#0A0C0F;-webkit-font-smoothing:antialiased}
+.num{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.serif{font-family:'Instrument Serif',ui-serif,Georgia,serif;font-weight:400;letter-spacing:-0.01em}
+.card{background:#111418;border:1px solid #1E232B;border-radius:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.03)}
+.eyebrow{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8A919B;font-weight:500}
+.muted{color:#8A919B}
+.up{color:#4CC495}.down{color:#EE7B68}.gold{color:#D4AE6C}
+.nav{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;color:#A3A9B2;font-size:14px}
+.nav:hover{background:#13171C;color:#ECE9E2}
+.nav.on{background:#151A20;color:#ECE9E2;box-shadow:inset 0 0 0 1px #232A33}
+.btn{font:inherit;font-size:13px;font-weight:500;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #2A313B;background:#151920;color:#ECE9E2;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.btn:hover{background:#1A1F27}
+.btn-danger{border-color:#5A2A24;color:#F29A89;background:#1A1210}
+.btn-danger:hover{background:#221613}
+.seg{display:inline-flex;padding:3px;border-radius:10px;background:#0D1013;border:1px solid #1E232B;gap:2px}
+.seg button{font:inherit;font-size:12px;font-weight:500;color:#8A919B;background:transparent;border:0;border-radius:7px;min-height:30px;padding:0 10px;cursor:pointer}
+.seg button.on{background:#1C2129;color:#ECE9E2}
+.chip{display:inline-flex;align-items:center;font-size:11px;font-weight:600;letter-spacing:0.06em;padding:3px 8px;border-radius:6px}
+.chip-buy{background:rgba(47,167,124,0.14);color:#5CCF9F}
+.chip-sell{background:rgba(224,96,76,0.14);color:#F08A78}
+.chip-mode{border:1px solid rgba(212,174,108,0.45);color:#D4AE6C;background:rgba(181,135,58,0.08)}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+.t th{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#7D848E;font-weight:500;text-align:left;padding:0 16px 12px;border-bottom:1px solid #1E232B;white-space:nowrap}
+.t td{padding:14px 16px;border-bottom:1px solid #171B21;white-space:nowrap}
+.t tr:last-child td{border-bottom:0}
+.t .r{text-align:right}
+.meter{height:6px;border-radius:3px;background:#1C2128;overflow:hidden}
+.pulse{width:8px;height:8px;border-radius:50%;background:#2FA77C;box-shadow:0 0 0 4px rgba(47,167,124,0.16);flex:none}
+.row{display:flex;align-items:center;gap:12px}
+</style>
+</helmet>
+<div class="app" style="min-height: 100vh; display: flex; flex-wrap: wrap">
+
+<aside style="flex: 1 1 232px; box-sizing: border-box; padding: 28px 18px; border-right: 1px solid #161A20; display: flex; flex-direction: column; gap: 32px; background: #0A0C0F">
+<div class="row" style="padding: 0 8px; gap: 10px">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12.5" fill="none" stroke="{{accent}}" stroke-width="1.5"></circle><path d="M8 18 L12.5 13 L15.5 15.5 L20 9.5" fill="none" stroke="#ECE9E2" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<div style="display: flex; flex-direction: column">
+<span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">trading-bot</span>
+<span class="muted" style="font-size: 12px">Control room</span>
+</div>
+</div>
+<nav aria-label="Main" style="display: flex; flex-direction: column; gap: 4px">
+<a class="nav on" href="Main.dc.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"></rect></svg>Overview</a>
+<a class="nav" href="Trades.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"></path></svg>Live trading<span class="pulse" style="margin-left: auto"></span></a>
+<a class="nav" href="History.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>Trade history</a>
+<a class="nav" href="Risk.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.5-3.2 8-7.5 9.5-4.3-1.5-7.5-5-7.5-9.5V6z"></path></svg>Risk &amp; system</a>
+</nav>
+<div class="card" style="margin-top: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; border-radius: 12px">
+<div class="row" style="justify-content: space-between"><span class="eyebrow">Mode</span><span class="chip chip-mode">PAPER</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Exchange</span><span>Binance</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Strategy</span><span class="num">dummy-v0</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Version</span><span class="num">0.1.0</span></div>
+<p class="muted" style="margin: 4px 0 0; font-size: 12px; line-height: 1.5">Simulated fills from live prices. No real funds at risk.</p>
+</div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 36px clamp(16px, 3vw, 44px) 56px; display: flex; flex-direction: column; gap: 24px; background: radial-gradient(900px 360px at 75% -120px, rgba(181,135,58,0.07), transparent 70%), #0A0C0F">
+
+<header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="eyebrow">Sunday 18 October · 19:33 UTC</span>
+<div class="row" style="gap: 14px"><h1 class="serif" style="margin: 0; font-size: 48px; line-height: 1">Overview</h1><span class="chip chip-mode">PAPER</span></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<div class="card" style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px; padding: 0 16px; min-height: 44px; border-radius: 12px; font-size: 13px">
+<span class="row" style="gap: 8px"><span class="pulse"></span>Running</span>
+<span class="muted">Uptime <span class="num" style="color: #ECE9E2">4d 07h</span></span>
+<span class="muted">Heartbeat <span class="num" style="color: #ECE9E2">2s ago</span></span>
+<span class="muted">Binance WS <span class="num" style="color: #ECE9E2">38 ms</span></span>
+</div>
+<button class="btn" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>Pause entries</button>
+<button class="btn btn-danger" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg>Flatten all</button>
+</div>
+</header>
+
+<section aria-label="Key figures" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: 14px">
+<div class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 10px; border-color: #2C2619">
+<span class="eyebrow">Equity</span>
+<span class="num" style="font-size: 30px; font-weight: 500">$10,482.16</span>
+<span style="font-size: 13px"><span class="up num">+$482.16 · +4.82%</span> <span class="muted">all time</span></span>
+</div>
+<div class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<span class="eyebrow">Today’s P&amp;L</span>
+<span class="num up" style="font-size: 30px; font-weight: 500">+$126.40</span>
+<span style="font-size: 13px"><span class="up num">+1.22%</span> <span class="muted">· 9 trades</span></span>
+</div>
+<div class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<span class="eyebrow">Unrealised</span>
+<span class="num up" style="font-size: 30px; font-weight: 500">+$38.09</span>
+<span class="muted" style="font-size: 13px">3 open positions</span>
+</div>
+<div class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<span class="eyebrow">Win rate · 30d</span>
+<span class="num" style="font-size: 30px; font-weight: 500">58.3%</span>
+<span class="muted" style="font-size: 13px">42 of 72 · profit factor <span class="num" style="color: #ECE9E2">1.64</span></span>
+</div>
+<div class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 10px">
+<span class="eyebrow">Drawdown</span>
+<span class="num" style="font-size: 30px; font-weight: 500">−3.1%</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div class="meter"><div style="width: 31%; height: 100%; background: #8A919B; border-radius: 3px"></div></div>
+<span class="muted" style="font-size: 12px">of −10.0% limit</span>
+</div>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px">
+<section class="card" aria-label="Equity curve" style="flex: 2 1 560px; min-width: 0; padding: 22px 22px 14px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Equity</h2>
+<div class="row" style="gap: 18px; font-size: 12px">
+<span class="row" style="gap: 8px"><span style="width: 14px; height: 2px; border-radius: 1px; background: {{accent}}"></span>Bot equity</span>
+<span class="row muted" style="gap: 8px"><span style="width: 14px; height: 2px; border-radius: 1px; background: #4F82E8"></span>BTC buy &amp; hold</span>
+</div>
+</div>
+<div class="seg" role="group" aria-label="Range"><button type="button">24H</button><button type="button">7D</button><button type="button" class="on" aria-pressed="true">30D</button><button type="button">ALL</button></div>
+</div>
+<svg viewBox="0 0 880 262" width="100%" role="img" aria-label="Equity over the last 30 days, rising from 10,000 to 10,482 dollars, ahead of BTC buy and hold at 10,310" style="display: block; overflow: visible">
+<g stroke="#1A1F26" stroke-width="1">
+<line x1="56" x2="864" y1="20" y2="20"></line><line x1="56" x2="864" y1="74" y2="74"></line><line x1="56" x2="864" y1="128" y2="128"></line><line x1="56" x2="864" y1="182" y2="182"></line><line x1="56" x2="864" y1="236" y2="236" stroke="#262C35"></line>
+</g>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11" fill="#7D848E" text-anchor="end">
+<text x="44" y="24">10.6k</text><text x="44" y="78">10.4k</text><text x="44" y="132">10.2k</text><text x="44" y="186">10.0k</text><text x="44" y="240">9.8k</text>
+</g>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11" fill="#7D848E" text-anchor="middle">
+<text x="56" y="258" text-anchor="start">Sep 18</text><text x="247" y="258">Sep 25</text><text x="437" y="258">Oct 2</text><text x="628" y="258">Oct 9</text><text x="819" y="258">Oct 16</text>
+</g>
+<path d="{{eqArea}}" fill="{{accent}}" fill-opacity="0.07"></path>
+<path d="{{bhPath}}" fill="none" stroke="#4F82E8" stroke-width="1.5" stroke-linejoin="round" stroke-opacity="0.85"></path>
+<path d="{{eqPath}}" fill="none" stroke="{{accent}}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+<line x1="{{hx}}" x2="{{hx}}" y1="20" y2="236" stroke="#3A414C" stroke-width="1" stroke-dasharray="3 3"></line>
+<circle cx="{{hx}}" cy="{{by}}" r="4" fill="#4F82E8" stroke="#111418" stroke-width="2"></circle>
+<circle cx="{{hx}}" cy="{{hy}}" r="5" fill="{{accent}}" stroke="#111418" stroke-width="2"></circle>
+<circle cx="{{endX}}" cy="{{endY}}" r="4" fill="{{accent}}" stroke="#111418" stroke-width="2"></circle>
+<g transform="{{tipTransform}}" font-family="Geist, ui-sans-serif, sans-serif">
+<rect width="178" height="74" rx="10" fill="#0D1013" stroke="#2A313B"></rect>
+<text x="14" y="22" font-size="11" fill="#8A919B">{{tipDate}}</text>
+<circle cx="18" cy="40" r="3.5" fill="{{accent}}"></circle><text x="28" y="44" font-size="12" fill="#A3A9B2">Bot</text><text x="164" y="44" font-size="12" fill="#ECE9E2" text-anchor="end" font-family="Geist Mono, ui-monospace, monospace">{{tipEq}}</text>
+<circle cx="18" cy="58" r="3.5" fill="#4F82E8"></circle><text x="28" y="62" font-size="12" fill="#A3A9B2">BTC hold</text><text x="164" y="62" font-size="12" fill="#ECE9E2" text-anchor="end" font-family="Geist Mono, ui-monospace, monospace">{{tipBh}}</text>
+</g>
+</svg>
+</section>
+
+<section class="card" aria-label="Live trades" style="flex: 1 1 340px; min-width: 0; padding: 22px; display: flex; flex-direction: column; gap: 16px">
+<div class="row" style="justify-content: space-between">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Live trades</h2>
+<span class="row muted" style="gap: 8px; font-size: 12px"><span class="pulse"></span>Streaming</span>
+</div>
+<div style="display: flex; flex-direction: column">
+<sc-for list="{{fills}}" as="f" hint-placeholder-count="7">
+<div style="display: grid; grid-template-columns: 64px 46px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid #171B21; font-size: 13px">
+<span class="num muted" style="font-size: 12px">{{f.time}}</span>
+<span class="chip {{f.chip}}" style="justify-content: center">{{f.side}}</span>
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span>{{f.pair}}</span><span class="num muted" style="font-size: 12px">{{f.qty}} @ {{f.price}}</span></span>
+<span class="num {{f.cls}}" style="text-align: right">{{f.pnl}}</span>
+</div>
+</sc-for>
+</div>
+<a href="Trades.dc.html" style="font-size: 13px; margin-top: auto; min-height: 44px; display: inline-flex; align-items: center">Open live trading →</a>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px">
+<section class="card" aria-label="Positions and orders" style="flex: 2 1 560px; min-width: 0; padding: 22px 6px 10px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 0 16px">
+<div class="seg" role="tablist" aria-label="Book"><button type="button" role="tab" class="on" aria-selected="true">Positions · 3</button><button type="button" role="tab">Open orders · 2</button></div>
+<span class="muted" style="font-size: 12px">Exposure <span class="num" style="color: #ECE9E2">$2,944.31</span> · 28.1% of equity</span>
+</div>
+<div style="overflow-x: auto">
+<table class="t">
+<thead><tr><th>Pair</th><th>Side</th><th class="r">Size</th><th class="r">Entry</th><th class="r">Mark</th><th class="r">Unrealised</th><th class="r">Stop</th><th class="r">Age</th><th class="r"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Action</span></th></tr></thead>
+<tbody>
+<sc-for list="{{positions}}" as="p" hint-placeholder-count="3">
+<tr>
+<td style="font-weight: 500">{{p.pair}}</td>
+<td><span class="chip chip-buy">LONG</span></td>
+<td class="r num">{{p.size}}</td>
+<td class="r num muted">{{p.entry}}</td>
+<td class="r num">{{p.mark}}</td>
+<td class="r num up">{{p.pnl}} <span style="opacity: 0.75">{{p.pct}}</span></td>
+<td class="r num muted">{{p.stop}}</td>
+<td class="r num muted">{{p.age}}</td>
+<td class="r"><button class="btn" type="button" style="min-height: 32px; padding: 0 12px; font-size: 12px">Close</button></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="card" aria-label="Risk limits" style="flex: 1 1 340px; min-width: 0; padding: 22px; display: flex; flex-direction: column; gap: 18px">
+<div class="row" style="justify-content: space-between">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Risk limits</h2>
+<span class="row" style="gap: 6px; font-size: 12px; color: #5CCF9F"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>All within limits</span>
+</div>
+<sc-for list="{{limits}}" as="l" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">{{l.name}}</span><span class="num">{{l.used}} <span class="muted">/ {{l.max}}</span></span></div>
+<div class="meter"><div style="width: {{l.w}}; height: 100%; border-radius: 3px; background: {{l.color}}"></div></div>
+</div>
+</sc-for>
+<a href="Risk.dc.html" style="font-size: 13px; margin-top: auto; min-height: 44px; display: inline-flex; align-items: center">Risk &amp; controls →</a>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px">
+<section class="card" aria-label="Daily profit and loss" style="flex: 2 1 560px; min-width: 0; padding: 22px 22px 14px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Daily P&amp;L · 30 days</h2>
+<span class="muted" style="font-size: 12px">Best <span class="num up">+$141.20</span> · Worst <span class="num down">−$72.85</span></span>
+</div>
+<svg viewBox="0 0 880 196" width="100%" role="img" aria-label="Daily realised profit and loss for the last 30 days, mostly positive" style="display: block">
+<g stroke="#1A1F26"><line x1="56" x2="864" y1="19" y2="19"></line><line x1="56" x2="864" y1="70" y2="70"></line><line x1="56" x2="864" y1="173" y2="173"></line></g>
+<line x1="56" x2="864" y1="121" y2="121" stroke="#2E353F"></line>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11" fill="#7D848E" text-anchor="end"><text x="44" y="23">+150</text><text x="44" y="74">+75</text><text x="44" y="125">0</text><text x="44" y="177">−75</text></g>
+<path d="{{barsUp}}" fill="#2FA77C"></path>
+<path d="{{barsDown}}" fill="#E0604C"></path>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11" fill="#7D848E" text-anchor="middle"><text x="69" y="194">Sep 19</text><text x="447" y="194">Oct 3</text><text x="851" y="194">Today</text></g>
+</svg>
+</section>
+
+<section class="card" aria-label="Recent events" style="flex: 1 1 340px; min-width: 0; padding: 22px; display: flex; flex-direction: column; gap: 6px">
+<div class="row" style="justify-content: space-between; margin-bottom: 8px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 600">Events</h2>
+<a href="Risk.dc.html" style="font-size: 13px">All events →</a>
+</div>
+<sc-for list="{{events}}" as="e" hint-placeholder-count="5">
+<div style="display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 9px 0; font-size: 13px; line-height: 1.45">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{e.color}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-top: 2px"><path d="{{e.icon}}"></path></svg>
+<span><span style="color: #ECE9E2">{{e.title}}</span> <span class="muted">{{e.detail}}</span></span>
+<span class="num muted" style="font-size: 12px">{{e.time}}</span>
+</div>
+</sc-for>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#B5873A","options":["#B5873A","#C08A5B","#8E9BB0"]},"$preview":{"width":1440,"height":1660}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accent ?? '#B5873A';
+    const rng = (seed) => { let s = seed; return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; };
+    const walk = (n, a, b, vol, seed) => {
+      const r = rng(seed); const out = []; let v = a;
+      for (let i = 0; i < n; i++) { const target = a + (b - a) * (i / (n - 1)); v += (r() - 0.5) * vol; v += (target - v) * 0.12; out.push(v); }
+      out[0] = a; out[n - 1] = b; return out;
+    };
+    const N = 90, X0 = 56, X1 = 864, Y0 = 20, Y1 = 236, LO = 9800, HI = 10600;
+    const px = (i) => X0 + i * (X1 - X0) / (N - 1);
+    const py = (v) => Y1 - (v - LO) / (HI - LO) * (Y1 - Y0);
+    const eq = walk(N, 10000, 10482.16, 70, 7);
+    const bh = walk(N, 10000, 10310, 120, 23);
+    const line = (s) => s.map((v, i) => (i ? 'L' : 'M') + px(i).toFixed(1) + ' ' + py(v).toFixed(1)).join(' ');
+    const eqPath = line(eq);
+    const H = 62;
+    const hx = px(H);
+    const money = (v) => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const days = ['Sep 18', 'Sep 19', 'Sep 20', 'Sep 21', 'Sep 22', 'Sep 23', 'Sep 24', 'Sep 25', 'Sep 26', 'Sep 27', 'Sep 28', 'Sep 29', 'Sep 30', 'Oct 1', 'Oct 2', 'Oct 3', 'Oct 4', 'Oct 5', 'Oct 6', 'Oct 7', 'Oct 8'];
+
+    const zero = 121, k = 0.683, slot = (X1 - X0) / 30, bw = 16, rr = 3;
+    const r2 = rng(41);
+    const pnl = Array.from({ length: 30 }, (_, i) => i === 29 ? 126.4 : i === 11 ? 141.2 : i === 17 ? -72.85 : Math.round(((r2() - 0.36) * 150) * 100) / 100);
+    let up = '', down = '';
+    pnl.forEach((v, i) => {
+      const x = X0 + i * slot + (slot - bw) / 2, h = Math.max(2, Math.abs(v) * k);
+      if (v >= 0) { const t = zero - 1 - h; up += `M${x} ${zero - 1} V${t + rr} Q${x} ${t} ${x + rr} ${t} H${x + bw - rr} Q${x + bw} ${t} ${x + bw} ${t + rr} V${zero - 1} Z `; }
+      else { const b = zero + 1 + h; down += `M${x} ${zero + 1} V${b - rr} Q${x} ${b} ${x + rr} ${b} H${x + bw - rr} Q${x + bw} ${b} ${x + bw} ${b - rr} V${zero + 1} Z `; }
+    });
+
+    const okIcon = 'M5 12.5l4.5 4.5L19 7.5';
+    const warnIcon = 'M12 4l9 16H3zM12 10v4M12 17.5v.01';
+    const riskIcon = 'M12 3l7.5 3v5.5c0 4.5-3.2 8-7.5 9.5-4.3-1.5-7.5-5-7.5-9.5V6zM12 9v4M12 16v.01';
+    const infoIcon = 'M12 3.5a8.5 8.5 0 1 0 0 17a8.5 8.5 0 1 0 0-17zM12 11v5M12 8v.01';
+
+    return {
+      accent,
+      eqPath,
+      eqArea: eqPath + ` L${X1} ${Y1} L${X0} ${Y1} Z`,
+      bhPath: line(bh),
+      hx: hx.toFixed(1), hy: py(eq[H]).toFixed(1), by: py(bh[H]).toFixed(1),
+      endX: px(N - 1).toFixed(1), endY: py(eq[N - 1]).toFixed(1),
+      tipTransform: `translate(${(hx + 14).toFixed(1)} 26)`,
+      tipDate: days[Math.floor(H / 3)] + ' · 16:00 UTC',
+      tipEq: money(eq[H]), tipBh: money(bh[H]),
+      barsUp: up, barsDown: down,
+      fills: [
+        { time: '19:32:41', side: 'SELL', chip: 'chip-sell', pair: 'BTC/USDT', qty: '0.0150', price: '67,412.50', pnl: '+$18.24', cls: 'up' },
+        { time: '19:31:07', side: 'BUY', chip: 'chip-buy', pair: 'ETH/USDT', qty: '0.420', price: '2,618.90', pnl: 'Opened', cls: 'muted' },
+        { time: '19:28:55', side: 'BUY', chip: 'chip-buy', pair: 'SOL/USDT', qty: '6.50', price: '154.32', pnl: 'Opened', cls: 'muted' },
+        { time: '19:22:13', side: 'SELL', chip: 'chip-sell', pair: 'ETH/USDT', qty: '0.380', price: '2,624.10', pnl: '−$4.12', cls: 'down' },
+        { time: '19:09:02', side: 'SELL', chip: 'chip-sell', pair: 'SOL/USDT', qty: '5.00', price: '155.80', pnl: '+$7.65', cls: 'up' },
+        { time: '18:58:30', side: 'BUY', chip: 'chip-buy', pair: 'BTC/USDT', qty: '0.0120', price: '66,980.00', pnl: 'Opened', cls: 'muted' },
+        { time: '18:41:16', side: 'BUY', chip: 'chip-buy', pair: 'BTC/USDT', qty: '0.0150', price: '66,196.40', pnl: 'Opened', cls: 'muted' }
+      ],
+      positions: [
+        { pair: 'BTC/USDT', size: '0.0120', entry: '66,980.00', mark: '67,412.50', pnl: '+$5.19', pct: '+0.65%', stop: '65,640.00', age: '35m' },
+        { pair: 'ETH/USDT', size: '0.420', entry: '2,618.90', mark: '2,644.30', pnl: '+$10.67', pct: '+0.97%', stop: '2,566.50', age: '2m' },
+        { pair: 'SOL/USDT', size: '6.50', entry: '154.32', mark: '157.74', pnl: '+$22.23', pct: '+2.22%', stop: '151.20', age: '4m' }
+      ],
+      limits: [
+        { name: 'Daily loss', used: '0.0%', max: '3.0%', w: '0%', color: '#8A919B' },
+        { name: 'Total exposure', used: '28.1%', max: '50%', w: '56%', color: '#8A919B' },
+        { name: 'Largest position', used: '10.6%', max: '20%', w: '53%', color: '#8A919B' },
+        { name: 'Open orders', used: '2', max: '10', w: '20%', color: '#8A919B' },
+        { name: 'Drawdown from peak', used: '3.1%', max: '10%', w: '31%', color: '#8A919B' }
+      ],
+      events: [
+        { title: 'Filled', detail: 'SELL 0.0150 BTC/USDT @ 67,412.50', time: '19:32', color: '#4CC495', icon: okIcon },
+        { title: 'Filled', detail: 'BUY 0.420 ETH/USDT @ 2,618.90', time: '19:31', color: '#4CC495', icon: okIcon },
+        { title: 'Reconnected', detail: 'Binance WS back after 4.2 s', time: '19:12', color: '#D9A441', icon: warnIcon },
+        { title: 'Order rejected', detail: 'SOL/USDT over max position size', time: '18:40', color: '#EE7B68', icon: riskIcon },
+        { title: 'Daily summary', detail: 'sent to Telegram', time: '08:00', color: '#8A919B', icon: infoIcon }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
