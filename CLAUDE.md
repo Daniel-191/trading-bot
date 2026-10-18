@@ -60,5 +60,5 @@ that introduces them, so the other developer's Claude knows about them.)_
 _(Record important design decisions here with a one-line rationale.)_
 - **Bitcoin only.** The bot trades a single BTC pair, set by `TRADING_PAIR` (not hardcoded).
   Don't build multi-coin features (screening, rankings, coin lists) without both developers agreeing.
-- **No CoinMarketCap, CoinGecko or other aggregator dependency.** With BTC only, the exchange's free
-  WebSocket/REST data via CCXT covers everything; aggregators add cost and a failure point for nothing.
+- **CoinMarketCap is our one market-data aggregator.** Key comes from `COINMARKETCAP_API_KEY`.
+  Live prices and order data still come from the exchange via CCXT; don't add a second aggregator (e.g. CoinGecko).
