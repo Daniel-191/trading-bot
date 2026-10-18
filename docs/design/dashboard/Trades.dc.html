@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Live trading · Trading bot</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#D4AE6C;text-decoration:none}a:hover{color:#E9C98F}
+.app{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;color:#ECE9E2;background:#0A0C0F;-webkit-font-smoothing:antialiased}
+.num{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.serif{font-family:'Instrument Serif',ui-serif,Georgia,serif;font-weight:400;letter-spacing:-0.01em}
+.card{background:#111418;border:1px solid #1E232B;border-radius:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.03)}
+.eyebrow{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8A919B;font-weight:500}
+.muted{color:#8A919B}
+.up{color:#4CC495}.down{color:#EE7B68}.gold{color:#D4AE6C}
+.nav{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;color:#A3A9B2;font-size:14px}
+.nav:hover{background:#13171C;color:#ECE9E2}
+.nav.on{background:#151A20;color:#ECE9E2;box-shadow:inset 0 0 0 1px #232A33}
+.btn{font:inherit;font-size:13px;font-weight:500;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #2A313B;background:#151920;color:#ECE9E2;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.btn:hover{background:#1A1F27}
+.btn-danger{border-color:#5A2A24;color:#F29A89;background:#1A1210}
+.btn-danger:hover{background:#221613}
+.seg{display:inline-flex;padding:3px;border-radius:10px;background:#0D1013;border:1px solid #1E232B;gap:2px}
+.seg button{font:inherit;font-size:12px;font-weight:500;color:#8A919B;background:transparent;border:0;border-radius:7px;min-height:30px;padding:0 10px;cursor:pointer}
+.seg button.on{background:#1C2129;color:#ECE9E2}
+.chip{display:inline-flex;align-items:center;font-size:11px;font-weight:600;letter-spacing:0.06em;padding:3px 8px;border-radius:6px}
+.chip-buy{background:rgba(47,167,124,0.14);color:#5CCF9F}
+.chip-sell{background:rgba(224,96,76,0.14);color:#F08A78}
+.chip-mode{border:1px solid rgba(212,174,108,0.45);color:#D4AE6C;background:rgba(181,135,58,0.08)}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+.t th{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#7D848E;font-weight:500;text-align:left;padding:0 16px 12px;border-bottom:1px solid #1E232B;white-space:nowrap}
+.t td{padding:14px 16px;border-bottom:1px solid #171B21;white-space:nowrap}
+.t tr:last-child td{border-bottom:0}
+.t .r{text-align:right}
+.meter{height:6px;border-radius:3px;background:#1C2128;overflow:hidden}
+.pulse{width:8px;height:8px;border-radius:50%;background:#2FA77C;box-shadow:0 0 0 4px rgba(47,167,124,0.16);flex:none}
+.row{display:flex;align-items:center;gap:12px}
+.book{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;position:relative;padding:5px 10px;font-size:12px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</helmet>
+<div class="app" style="min-height: 100vh; display: flex; flex-wrap: wrap">
+
+<aside style="flex: 1 1 232px; box-sizing: border-box; padding: 28px 18px; border-right: 1px solid #161A20; display: flex; flex-direction: column; gap: 32px; background: #0A0C0F">
+<div class="row" style="padding: 0 8px; gap: 10px">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12.5" fill="none" stroke="{{accent}}" stroke-width="1.5"></circle><path d="M8 18 L12.5 13 L15.5 15.5 L20 9.5" fill="none" stroke="#ECE9E2" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<div style="display: flex; flex-direction: column">
+<span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">trading-bot</span>
+<span class="muted" style="font-size: 12px">Control room</span>
+</div>
+</div>
+<nav aria-label="Main" style="display: flex; flex-direction: column; gap: 4px">
+<a class="nav" href="Main.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"></rect></svg>Overview</a>
+<a class="nav on" href="Trades.dc.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"></path></svg>Live trading<span class="pulse" style="margin-left: auto"></span></a>
+<a class="nav" href="History.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>Trade history</a>
+<a class="nav" href="Risk.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.5-3.2 8-7.5 9.5-4.3-1.5-7.5-5-7.5-9.5V6z"></path></svg>Risk &amp; system</a>
+</nav>
+<div class="card" style="margin-top: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; border-radius: 12px">
+<div class="row" style="justify-content: space-between"><span class="eyebrow">Mode</span><span class="chip chip-mode">PAPER</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Exchange</span><span>Binance</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Strategy</span><span class="num">dummy-v0</span></div>
+<div class="row" style="justify-content: space-between; font-size: 13px"><span class="muted">Version</span><span class="num">0.1.0</span></div>
+<p class="muted" style="margin: 4px 0 0; font-size: 12px; line-height: 1.5">Simulated fills from live prices. No real funds at risk.</p>
+</div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 36px clamp(16px, 3vw, 44px) 56px; display: flex; flex-direction: column; gap: 24px; background: radial-gradient(900px 360px at 75% -120px, rgba(181,135,58,0.07), transparent 70%), #0A0C0F">
+
+<header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="eyebrow">Live trading</span>
+<div class="row" style="gap: 14px; flex-wrap: wrap"><h1 class="serif" style="margin: 0; font-size: 48px; line-height: 1">BTC/USDT</h1><span class="num" style="font-size: 26px">67,412.50</span><span class="num up" style="font-size: 14px">▲ +1.84% 24h</span></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<div class="seg" role="tablist" aria-label="Market"><button type="button" role="tab" class="on" aria-selected="true">BTC/USDT</button><button type="button" role="tab">ETH/USDT</button><button type="button" role="tab">SOL/USDT</button></div>
+<button class="btn" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>Pause entries</button>
+</div>
+</header>
+
+<section class="card" aria-label="Market summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 0; padding: 6px 4px">
+<div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 6px"><span class="eyebrow">24h high</span><span class="num">67,890.00</span></div>
+<div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 6px"><span class="eyebrow">24h low</span><span class="num">65,902.10</span></div>
+<div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 6px"><span class="eyebrow">24h volume</span><span class="num">18,204 BTC</span></div>
+<div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 6px"><span class="eyebrow">Spread</span><span class="num">0.50 · 0.7 bp</span></div>
+<div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 6px; border-left: 1px solid #1E232B"><span class="eyebrow">Our position</span><span class="num"><span class="up">LONG</span> 0.0120 @ 66,980.00</span></div>
+<div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 6px"><span class="eyebrow">Unrealised</span><span class="num up">+$5.19 · +0.65%</span></div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px">
+<section class="card" aria-label="Price chart" style="flex: 3 1 600px; min-width: 0; padding: 22px 22px 14px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div class="row" style="gap: 18px; flex-wrap: wrap; font-size: 12px">
+<span class="row" style="gap: 6px"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1L9.5 9H0.5Z" fill="#2FA77C"></path></svg>Our buys</span>
+<span class="row" style="gap: 6px"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 9L9.5 1H0.5Z" fill="#E0604C"></path></svg>Our sells</span>
+<span class="row muted" style="gap: 6px"><span style="width: 16px; border-top: 1.5px dashed {{accent}}"></span>Entry</span>
+<span class="row muted" style="gap: 6px"><span style="width: 16px; border-top: 1.5px dashed #4F82E8"></span>Take profit</span>
+<span class="row muted" style="gap: 6px"><span style="width: 16px; border-top: 1.5px dashed #E0604C"></span>Stop</span>
+</div>
+<div class="seg" role="group" aria-label="Timeframe"><button type="button">1m</button><button type="button" class="on" aria-pressed="true">5m</button><button type="button">15m</button><button type="button">1h</button><button type="button">4h</button></div>
+</div>
+<svg viewBox="0 0 920 410" width="100%" role="img" aria-label="Five-minute BTC/USDT candles for the last six hours with the bot's buys and sells marked" style="display: block">
+<g stroke="#1A1F26"><line x1="8" x2="846" y1="57.9" y2="57.9"></line><line x1="8" x2="846" y1="110.2" y2="110.2"></line><line x1="8" x2="846" y1="162.5" y2="162.5"></line><line x1="8" x2="846" y1="214.9" y2="214.9"></line><line x1="8" x2="846" y1="267.2" y2="267.2"></line><line x1="8" x2="846" y1="319.5" y2="319.5"></line></g>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11" fill="#7D848E"><text x="856" y="61.9">68,000</text><text x="856" y="114.2">67,500</text><text x="856" y="166.5">67,000</text><text x="856" y="218.9">66,500</text><text x="856" y="271.2">66,000</text><text x="856" y="323.5">65,500</text></g>
+<path d="{{volUp}}" fill="#2FA77C" fill-opacity="0.35"></path>
+<path d="{{volDown}}" fill="#E0604C" fill-opacity="0.35"></path>
+<path d="{{wickUp}}" stroke="#2FA77C" stroke-width="1"></path>
+<path d="{{wickDown}}" stroke="#E0604C" stroke-width="1"></path>
+<path d="{{bodyUp}}" fill="#111418" stroke="#2FA77C" stroke-width="1.2"></path>
+<path d="{{bodyDown}}" fill="#E0604C"></path>
+<line x1="8" x2="846" y1="37" y2="37" stroke="#4F82E8" stroke-width="1.2" stroke-dasharray="5 4"></line>
+<line x1="8" x2="846" y1="164.6" y2="164.6" stroke="{{accent}}" stroke-width="1.2" stroke-dasharray="5 4"></line>
+<line x1="8" x2="846" y1="304.9" y2="304.9" stroke="#E0604C" stroke-width="1.2" stroke-dasharray="5 4"></line>
+<line x1="8" x2="846" y1="119.4" y2="119.4" stroke="#ECE9E2" stroke-opacity="0.35" stroke-width="1"></line>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11">
+<rect x="848" y="28" width="70" height="18" rx="4" fill="#1A2740"></rect><text x="854" y="41" fill="#9DBBF5">TP 68,200</text>
+<rect x="848" y="155.6" width="70" height="18" rx="4" fill="#2A2416"></rect><text x="854" y="168.6" fill="#D4AE6C">66,980.0</text>
+<rect x="848" y="295.9" width="70" height="18" rx="4" fill="#2C1714"></rect><text x="854" y="308.9" fill="#F08A78">SL 65,640</text>
+<rect x="848" y="110.4" width="70" height="18" rx="4" fill="#ECE9E2"></rect><text x="854" y="123.4" fill="#0A0C0F" font-weight="500">67,412.5</text>
+</g>
+<path d="{{buys}}" fill="#2FA77C" stroke="#111418" stroke-width="2" stroke-linejoin="round"></path>
+<path d="{{sells}}" fill="#E0604C" stroke="#111418" stroke-width="2" stroke-linejoin="round"></path>
+<g font-family="Geist Mono, ui-monospace, monospace" font-size="11" fill="#7D848E" text-anchor="middle"><text x="14" y="406" text-anchor="start">13:35</text><text x="222" y="406">15:05</text><text x="430" y="406">16:35</text><text x="638" y="406">18:05</text><text x="834" y="406">19:30</text></g>
+</svg>
+</section>
+
+<section class="card" aria-label="Order book" style="flex: 1 1 300px; min-width: 0; padding: 22px 14px; display: flex; flex-direction: column; gap: 6px">
+<div class="row" style="justify-content: space-between; padding: 0 10px 8px"><h2 style="margin: 0; font-size: 16px; font-weight: 600">Order book</h2><span class="muted num" style="font-size: 12px">Depth 0.5</span></div>
+<div class="book eyebrow" style="font-size: 10px"><span>Price</span><span style="text-align: right">Size</span><span style="text-align: right">Total</span></div>
+<sc-for list="{{asks}}" as="a" hint-placeholder-count="8">
+<div class="book num"><span style="position: absolute; right: 0; top: 1px; bottom: 1px; width: {{a.w}}; background: rgba(224,96,76,0.10); border-radius: 4px"></span><span class="down" style="position: relative">{{a.price}}</span><span style="text-align: right; position: relative">{{a.size}}</span><span class="muted" style="text-align: right; position: relative">{{a.total}}</span></div>
+</sc-for>
+<div class="row" style="justify-content: space-between; padding: 12px 10px; margin: 4px 0; border-top: 1px solid #1E232B; border-bottom: 1px solid #1E232B"><span class="num" style="font-size: 18px">67,412.50</span><span class="muted num" style="font-size: 12px">spread 0.50</span></div>
+<sc-for list="{{bids}}" as="b" hint-placeholder-count="8">
+<div class="book num"><span style="position: absolute; right: 0; top: 1px; bottom: 1px; width: {{b.w}}; background: rgba(47,167,124,0.10); border-radius: 4px"></span><span class="up" style="position: relative">{{b.price}}</span><span style="text-align: right; position: relative">{{b.size}}</span><span class="muted" style="text-align: right; position: relative">{{b.total}}</span></div>
+</sc-for>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px">
+<section class="card" aria-label="Open orders" style="flex: 3 1 600px; min-width: 0; padding: 22px 6px 10px; display: flex; flex-direction: column; gap: 14px">
+<div class="row" style="justify-content: space-between; padding: 0 16px"><h2 style="margin: 0; font-size: 16px; font-weight: 600">Open orders <span class="muted num" style="font-weight: 400">2</span></h2><button class="btn" type="button" style="min-height: 36px; font-size: 12px">Cancel all</button></div>
+<div style="overflow-x: auto">
+<table class="t">
+<thead><tr><th>Placed</th><th>Pair</th><th>Type</th><th>Side</th><th class="r">Qty</th><th class="r">Price</th><th class="r">Filled</th><th>Status</th><th class="r"><span class="sr">Action</span></th></tr></thead>
+<tbody>
+<tr><td class="num muted">18:58:31</td><td style="font-weight: 500">BTC/USDT</td><td class="muted">Limit · take profit</td><td><span class="chip chip-sell">SELL</span></td><td class="r num">0.0120</td><td class="r num">68,200.00</td><td class="r num muted">0%</td><td><span class="row" style="gap: 8px; font-size: 12px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #4F82E8"></span>Open</span></td><td class="r"><button class="btn" type="button" style="min-height: 32px; padding: 0 12px; font-size: 12px">Cancel</button></td></tr>
+<tr><td class="num muted">19:28:56</td><td style="font-weight: 500">SOL/USDT</td><td class="muted">Stop market</td><td><span class="chip chip-sell">SELL</span></td><td class="r num">6.50</td><td class="r num">151.20</td><td class="r num muted">0%</td><td><span class="row" style="gap: 8px; font-size: 12px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #4F82E8"></span>Open</span></td><td class="r"><button class="btn" type="button" style="min-height: 32px; padding: 0 12px; font-size: 12px">Cancel</button></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="card" aria-label="Strategy" style="flex: 1 1 300px; min-width: 0; padding: 22px; display: flex; flex-direction: column; gap: 16px">
+<div class="row" style="justify-content: space-between"><h2 style="margin: 0; font-size: 16px; font-weight: 600">Strategy</h2><span class="num muted" style="font-size: 12px">dummy-v0</span></div>
+<div style="display: flex; align-items: baseline; gap: 12px"><span class="serif" style="font-size: 40px; line-height: 1">Hold</span><span class="muted" style="font-size: 13px">last signal · 19:30:00</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px">
+<div class="row" style="justify-content: space-between"><span class="muted">Next evaluation</span><span class="num">in 0:27</span></div>
+<div class="row" style="justify-content: space-between"><span class="muted">Signals today</span><span class="num">14 · 9 acted</span></div>
+<div class="row" style="justify-content: space-between"><span class="muted">Blocked by risk</span><span class="num">1</span></div>
+</div>
+</section>
+</div>
+
+<section class="card" aria-label="Fills today" style="padding: 22px 6px 10px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 0 16px">
+<div class="row" style="gap: 12px"><h2 style="margin: 0; font-size: 16px; font-weight: 600">Fills · today</h2><span class="row muted" style="gap: 8px; font-size: 12px"><span class="pulse"></span>Live</span></div>
+<a href="History.dc.html" style="font-size: 13px">Full history →</a>
+</div>
+<div style="overflow-x: auto">
+<table class="t">
+<thead><tr><th>Time</th><th>Order</th><th>Pair</th><th>Side</th><th class="r">Qty</th><th class="r">Price</th><th class="r">Notional</th><th class="r">Fee</th><th>Liquidity</th><th class="r">Realised</th></tr></thead>
+<tbody>
+<sc-for list="{{fills}}" as="f" hint-placeholder-count="6">
+<tr><td class="num muted">{{f.time}}</td><td class="num muted">{{f.id}}</td><td style="font-weight: 500">{{f.pair}}</td><td><span class="chip {{f.chip}}">{{f.side}}</span></td><td class="r num">{{f.qty}}</td><td class="r num">{{f.price}}</td><td class="r num">{{f.notional}}</td><td class="r num muted">{{f.fee}}</td><td class="muted">{{f.liq}}</td><td class="r num {{f.cls}}">{{f.pnl}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#B5873A","options":["#B5873A","#C08A5B","#8E9BB0"]},"$preview":{"width":1440,"height":1420}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accent ?? '#B5873A';
+    const rng = (seed) => { let s = seed; return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; };
+    const r = rng(11);
+    const C = 72, X0 = 8, slot = 838 / C, bw = 7;
+    const y = (p) => 330 - (p - 65400) * 0.104667;
+    const start = 66100, end = 67412.5;
+    let o = start;
+    let wickUp = '', wickDown = '', bodyUp = '', bodyDown = '', volUp = '', volDown = '';
+    const lows = [], highs = [];
+    for (let i = 0; i < C; i++) {
+      const target = start + (end - start) * (i / (C - 1)) + Math.sin(i / 7) * 220;
+      let c = o + (r() - 0.5) * 170 + (target - o) * 0.25;
+      if (i === C - 1) c = end;
+      const hi = Math.max(o, c) + r() * 60 + 8, lo = Math.min(o, c) - r() * 60 - 8;
+      const x = X0 + i * slot + (slot - bw) / 2, cx = (x + bw / 2).toFixed(1);
+      const yt = y(Math.max(o, c)), yb = Math.max(y(Math.min(o, c)), yt + 1);
+      const rect = `M${x.toFixed(1)} ${yt.toFixed(1)} H${(x + bw).toFixed(1)} V${yb.toFixed(1)} H${x.toFixed(1)} Z `;
+      const wick = `M${cx} ${y(hi).toFixed(1)} V${y(lo).toFixed(1)} `;
+      const vh = 6 + r() * 34;
+      const vol = `M${x.toFixed(1)} 392 V${(392 - vh).toFixed(1)} H${(x + bw).toFixed(1)} V392 Z `;
+      if (c >= o) { wickUp += wick; bodyUp += rect; volUp += vol; } else { wickDown += wick; bodyDown += rect; volDown += vol; }
+      lows.push([+cx, y(lo)]); highs.push([+cx, y(hi)]);
+      o = c;
+    }
+    const tri = (pts, dir) => pts.map(([x, yy]) => dir > 0
+      ? `M${x} ${(yy + 6).toFixed(1)} L${x - 6} ${(yy + 16).toFixed(1)} L${x + 6} ${(yy + 16).toFixed(1)} Z`
+      : `M${x} ${(yy - 6).toFixed(1)} L${x - 6} ${(yy - 16).toFixed(1)} L${x + 6} ${(yy - 16).toFixed(1)} Z`).join(' ');
+    const buys = tri([lows[14], lows[33], lows[59]], 1);
+    const sells = tri([highs[24], highs[47], highs[71]], -1);
+
+    const book = (base, step, sign, seed) => {
+      const rr = rng(seed); let tot = 0; const rows = [];
+      for (let i = 0; i < 8; i++) { const s = 0.05 + rr() * 1.4; tot += s; rows.push({ p: base + sign * i * step, s, tot }); }
+      const max = rows[rows.length - 1].tot;
+      return rows.map((q) => ({ price: q.p.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), size: q.s.toFixed(4), total: q.tot.toFixed(3), w: Math.round(q.tot / max * 100) + '%' }));
+    };
+
+    return {
+      accent, wickUp, wickDown, bodyUp, bodyDown, volUp, volDown, buys, sells,
+      asks: book(67413.0, 0.5, 1, 5).reverse(),
+      bids: book(67412.5, 0.5, -1, 9),
+      fills: [
+        { time: '19:32:41', id: '#10482', pair: 'BTC/USDT', side: 'SELL', chip: 'chip-sell', qty: '0.0150', price: '67,412.50', notional: '$1,011.19', fee: '$1.01', liq: 'Taker', pnl: '+$18.24', cls: 'up' },
+        { time: '19:31:07', id: '#10481', pair: 'ETH/USDT', side: 'BUY', chip: 'chip-buy', qty: '0.420', price: '2,618.90', notional: '$1,099.94', fee: '$1.10', liq: 'Taker', pnl: '—', cls: 'muted' },
+        { time: '19:28:55', id: '#10480', pair: 'SOL/USDT', side: 'BUY', chip: 'chip-buy', qty: '6.50', price: '154.32', notional: '$1,003.08', fee: '$0.75', liq: 'Maker', pnl: '—', cls: 'muted' },
+        { time: '19:22:13', id: '#10479', pair: 'ETH/USDT', side: 'SELL', chip: 'chip-sell', qty: '0.380', price: '2,624.10', notional: '$997.16', fee: '$1.00', liq: 'Taker', pnl: '−$4.12', cls: 'down' },
+        { time: '19:09:02', id: '#10478', pair: 'SOL/USDT', side: 'SELL', chip: 'chip-sell', qty: '5.00', price: '155.80', notional: '$779.00', fee: '$0.58', liq: 'Maker', pnl: '+$7.65', cls: 'up' },
+        { time: '18:58:30', id: '#10477', pair: 'BTC/USDT', side: 'BUY', chip: 'chip-buy', qty: '0.0120', price: '66,980.00', notional: '$803.76', fee: '$0.80', liq: 'Taker', pnl: '—', cls: 'muted' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

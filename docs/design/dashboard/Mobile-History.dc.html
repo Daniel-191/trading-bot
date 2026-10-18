@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Trade history · Trading bot mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#D4AE6C;text-decoration:none}a:hover{color:#E9C98F}
+.app{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;color:#ECE9E2;background:#0A0C0F;-webkit-font-smoothing:antialiased}
+.num{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.serif{font-family:'Instrument Serif',ui-serif,Georgia,serif;font-weight:400;letter-spacing:-0.01em}
+.card{background:#111418;border:1px solid #1E232B;border-radius:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.03)}
+.eyebrow{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8A919B;font-weight:500}
+.muted{color:#8A919B}
+.up{color:#4CC495}.down{color:#EE7B68}
+.row{display:flex;align-items:center;gap:10px}
+.chip{display:inline-flex;align-items:center;font-size:10px;font-weight:600;letter-spacing:0.06em;padding:3px 7px;border-radius:6px}
+.chip-buy{background:rgba(47,167,124,0.14);color:#5CCF9F}
+.chip-mode{border:1px solid rgba(212,174,108,0.45);color:#D4AE6C;background:rgba(181,135,58,0.08)}
+.pill{font:inherit;font-size:13px;font-weight:500;min-height:40px;padding:0 14px;border-radius:20px;border:1px solid #2A313B;background:#13171C;color:#ECE9E2;display:inline-flex;align-items:center;gap:6px;cursor:pointer;flex:none}
+.pill.on{border-color:rgba(212,174,108,0.5);color:#D4AE6C;background:rgba(181,135,58,0.08)}
+.pulse{width:8px;height:8px;border-radius:50%;background:#2FA77C;box-shadow:0 0 0 4px rgba(47,167,124,0.16);flex:none}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:56px;font-size:11px;font-weight:500;color:#7D848E}
+.tab.on{color:#D4AE6C}
+</style>
+</helmet>
+<div class="app" style="width: 390px; height: 844px; display: flex; flex-direction: column; overflow: hidden; background: radial-gradient(420px 260px at 80% -80px, rgba(181,135,58,0.10), transparent 70%), #0A0C0F">
+
+<header style="padding: 56px 20px 12px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span class="muted" style="font-size: 12px">Last 30 days · 72 trades</span><h1 class="serif" style="margin: 0; font-size: 36px; line-height: 1">History</h1></div>
+<button class="pill" type="button" aria-label="Export CSV"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>CSV</button>
+</div>
+<div style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px">
+<button class="pill on" type="button">30 days ▾</button>
+<button class="pill" type="button">All pairs ▾</button>
+<button class="pill" type="button">Wins &amp; losses ▾</button>
+<button class="pill" type="button" aria-label="Search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4 4"></path></svg></button>
+</div>
+</header>
+
+<div style="flex: 1; min-height: 0; overflow-y: auto; padding: 4px 16px 20px; display: flex; flex-direction: column; gap: 12px">
+
+<section class="card" aria-label="Summary" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px">
+<div style="padding: 14px 12px; display: flex; flex-direction: column; gap: 6px"><span class="eyebrow">Net P&amp;L</span><span class="num up" style="font-size: 17px">+$482.16</span></div>
+<div style="padding: 14px 12px; display: flex; flex-direction: column; gap: 6px"><span class="eyebrow">Win rate</span><span class="num" style="font-size: 17px">58.3%</span></div>
+<div style="padding: 14px 12px; display: flex; flex-direction: column; gap: 6px"><span class="eyebrow">Profit factor</span><span class="num" style="font-size: 17px">1.64</span></div>
+<div style="padding: 14px 12px; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #1A1F26"><span class="eyebrow">Avg win</span><span class="num up" style="font-size: 15px">+$24.80</span></div>
+<div style="padding: 14px 12px; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #1A1F26"><span class="eyebrow">Avg loss</span><span class="num down" style="font-size: 15px">−$18.10</span></div>
+<div style="padding: 14px 12px; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #1A1F26"><span class="eyebrow">Fees</span><span class="num" style="font-size: 15px">$61.40</span></div>
+</section>
+
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+<section aria-label="{{g.label}}" style="display: flex; flex-direction: column; gap: 8px">
+<div class="row" style="justify-content: space-between; padding: 6px 4px 0"><span class="eyebrow">{{g.label}}</span><span class="num {{g.cls}}" style="font-size: 12px">{{g.total}}</span></div>
+<div class="card" style="padding: 0 16px">
+<sc-for list="{{g.trades}}" as="t" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 0; border-bottom: 1px solid #171B21">
+<div class="row" style="justify-content: space-between"><span class="row" style="gap: 8px; font-size: 14px; font-weight: 500">{{t.pair}}<span class="chip chip-buy">LONG</span></span><span class="num {{t.cls}}" style="font-size: 14px">{{t.pnl}}</span></div>
+<div class="row" style="justify-content: space-between; font-size: 12px"><span class="num muted">{{t.entry}} → {{t.exit}}</span><span class="num {{t.cls}}" style="opacity: 0.8">{{t.ret}}</span></div>
+<div class="muted" style="font-size: 12px">{{t.time}} · held {{t.held}} · {{t.reason}}</div>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+<button class="pill" type="button" style="align-self: center; margin-top: 4px">Load more</button>
+</div>
+
+<nav aria-label="Main" style="display: flex; padding: 6px 8px 22px; border-top: 1px solid #161A20; background: rgba(10,12,15,0.94)">
+<a class="tab" href="Mobile-Overview.dc.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"></rect></svg>Overview</a>
+<a class="tab" href="Mobile-Live.dc.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"></path></svg>Live</a>
+<a class="tab on" href="Mobile-History.dc.html" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>History</a>
+<a class="tab" href="Mobile-Controls.dc.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.5-3.2 8-7.5 9.5-4.3-1.5-7.5-5-7.5-9.5V6z"></path></svg>Controls</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const t = (pair, entry, exit, pnl, ret, time, held, reason) => ({ pair, entry, exit, pnl, ret, time, held, reason, cls: pnl.startsWith('+') ? 'up' : 'down' });
+    return {
+      groups: [
+        { label: 'Today', total: '+$126.40', cls: 'up', trades: [
+          t('BTC/USDT', '66,196.40', '67,412.50', '+$18.24', '+1.84%', '19:32', '51m', 'Take profit'),
+          t('ETH/USDT', '2,634.94', '2,624.10', '−$4.12', '−0.41%', '19:22', '23m', 'Signal exit'),
+          t('SOL/USDT', '154.27', '155.80', '+$7.65', '+0.99%', '19:09', '38m', 'Take profit'),
+          t('BTC/USDT', '66,410.00', '66,902.30', '+$7.38', '+0.74%', '17:48', '1h 04m', 'Signal exit')
+        ] },
+        { label: 'Yesterday', total: '+$58.92', cls: 'up', trades: [
+          t('ETH/USDT', '2,581.20', '2,612.75', '+$12.62', '+1.22%', '22:14', '1h 32m', 'Trailing stop'),
+          t('SOL/USDT', '153.10', '150.62', '−$14.88', '−1.62%', '18:05', '19m', 'Stop loss'),
+          t('BTC/USDT', '65,880.00', '66,720.40', '+$12.61', '+1.28%', '13:51', '46m', 'Take profit')
+        ] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
