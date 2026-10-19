@@ -27,7 +27,7 @@ A daily trend bot generates a lot of data about some things and almost none abou
 | **When to be long** (the signal) | 2–5 entries; 365 daily returns | 13–20+ years for a +0.2 Sharpe gain (table below) | **No.** Only from history, then a long forward shadow run |
 | **Per-trade statistics** (win rate, payoff) | 2–5 closed trades | About 100 trades, i.e. 20–40 years, to pin a win rate down to ±10 points | **No** |
 | **Volatility estimate** (position size) | 365 forecasts scored daily | About 2 years (our test reached t ≈ −2.5 after two years) | **Yes, slowly** |
-| **Execution** (slippage, fees, order type, timing) | Every order, plus order-book snapshots we record each minute | Weeks to months | **Yes** |
+| **Execution** (slippage, fees, order type, timing) | Every order (about 36 small rebalances a year), plus order-book snapshots we record each minute | Months | **Yes** |
 | **Operations** (missed candles, rejected orders, reconnects, replay mismatches) | Continuous | Immediately | **Yes.** Early losses are most likely to come from here |
 
 The signal row is the one people mean by "learning from trades", and it is hopeless at our scale. The arithmetic is simple. Suppose the current strategy (the champion) and a candidate replacement (the challenger) run side by side on the same daily data, with similar volatility and correlation ρ. The years needed before the challenger's Sharpe advantage reaches a t-statistic of 2 are about **8(1 − ρ) ÷ ΔSharpe²**:
@@ -143,7 +143,7 @@ What Claude is good at here:
 
 ### The daily strategy (the champion)
 
-The champion is Option A from [`STRATEGY_OPTIONS.md`](STRATEGY_OPTIONS.md). Once a day, at the 00:00 UTC close, the bot:
+The champion is Option A from [`STRATEGY_OPTIONS.md`](STRATEGY_OPTIONS.md), specified exactly in [`STRATEGY_SPEC.md`](STRATEGY_SPEC.md). Once a day, at the 00:00 UTC close, the bot:
 
 1. Closes and validates the daily candle (no gaps, no duplicate timestamps).
 2. Computes the ten sub-signals (momentum over 30/60/90/180/365 days, Donchian over 10/20/40/80/160 days) and averages them into a signal between 0 and 1.

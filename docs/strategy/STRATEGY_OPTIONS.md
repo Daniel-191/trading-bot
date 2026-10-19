@@ -176,5 +176,5 @@ Next steps:
 1. Agree the objective. We also need to decide whether perps are allowed at all, since they determine whether Options C and D exist.
 2. Freeze the holdout window.
 3. Reproduce the Option A table on Binance BTC/USDT data in our own backtester, once it exists (Phase 6).
-4. Open a GitHub issue that pre-registers Option A's rules before we tune anything.
+4. Open a GitHub issue that pre-registers Option A's rules before we tune anything. The proposed rules are written out in [`STRATEGY_SPEC.md`](STRATEGY_SPEC.md).
 5. Decide how the bot learns from its own trades without overfitting. The proposal, and a walk-forward test of 15 learning schemes, is in [`LEARNING_LOOP.md`](LEARNING_LOOP.md).
