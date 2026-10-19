@@ -360,9 +360,9 @@ HDR = (
 
 def fmt(d: dict) -> str:
     return (
-        f"{d['CAGR']:>6.1%} {d['Vol']:>5.1%} {d['Sharpe']:>5.2f} {d['MaxDD']:>6.1%} {d['Lev']:>4.1f} "
-        f"{d['RT']:>6.1f} {d['TC']:>5.2%} {d['Fin']:>+6.2%} {d['Mku']:>5.2%} {d['WorstD']:>6.1%} "
-        f"{d['WorstM']:>6.1%}"
+        f"{d['CAGR']:>6.1%} {d['Vol']:>5.1%} {d['Sharpe']:>5.2f} {d['MaxDD']:>6.1%} "
+        f"{d['Lev']:>4.1f} {d['RT']:>6.1f} {d['TC']:>5.2%} {d['Fin']:>+6.2%} {d['Mku']:>5.2%} "
+        f"{d['WorstD']:>6.1%} {d['WorstM']:>6.1%}"
     )
 
 
@@ -439,7 +439,7 @@ def main() -> None:
     print("\n=== Robustness on FULL period (Sharpe) and block-bootstrap P(Sharpe<=0) ===")
     print(
         f"{'strategy':<40} {'base':>5} {'+1lag':>6} {'c0.5x':>6} {'c2x':>6} {'mk0':>6} "
-        f"{'mk2%':>6} {'spot':>6} {'t':>5} {'p(21d)':>7} {'p(63d)':>7}"
+        f"{'mk2%':>6} {'spot':>6} {'frict0':>6} {'t':>5} {'p(21d)':>7} {'p(63d)':>7}"
     )
     for name, W in strats.items():
         base = full[name]
@@ -453,6 +453,7 @@ def main() -> None:
             sh(simulate(mk, W, markup=0.0)),
             sh(simulate(mk, W, markup=0.02)),
             sh(simulate(mk, W, cost_mult=0.0, financing=False)),
+            sh(simulate(mk, W, cost_mult=0.0, markup=0.0)),
         ]
         yrs = len(base) / mk.ann
         p21 = boot_p(base["net"], 21)
@@ -464,14 +465,18 @@ def main() -> None:
         )
     print(
         "cols: base | one extra day of lag | spread cost x0.5 | x2 | markup 0 | markup 2%/yr | "
-        "spot only (no carry, no markup, no spread) | t = Sharpe*sqrt(yrs)"
+        "spot only (no carry, no markup, no spread) | frictionless (spot + carry, no costs) | "
+        "t = Sharpe*sqrt(yrs)"
     )
 
     print("\n=== Correlation of daily net returns, FULL period ===")
     codes = ["a", "b", "c3", "c12", "d_raw", "d", "e1", "e2", "f", "usd_raw", "usd"]
     cm = pd.DataFrame({c_: r["net"] for c_, r in zip(codes, full.values(), strict=True)}).corr()
     print(cm.round(2).to_string())
-    print("codes in table order: " + ", ".join(f"{c_}={n_}" for c_, n_ in zip(codes, full)))
+    print(
+        "codes in table order: "
+        + ", ".join(f"{c_}={n_}" for c_, n_ in zip(codes, full, strict=True))
+    )
 
     print("\n=== Tail windows: cumulative net return ===")
     windows = {
@@ -504,7 +509,8 @@ def main() -> None:
         + " ".join(f"{c}:{(me[c] < 0).mean():.0%}" for c in CCYS)
         + f" USD:{usd_short:.0%}"
     )
-    gross_diff = (mk.rates_signal[CCYS].sub(mk.rates_signal["USD"], axis=0) / 100 * me).sum(axis=1)
+    rsd = mk.rates_signal.loc[me.index]
+    gross_diff = (rsd[CCYS].sub(rsd["USD"], axis=0) / 100 * me).sum(axis=1)
     print(
         f"Ex-ante rate differential of the unscaled carry book, mean {gross_diff.mean():.2%}/yr; "
         f"by year: "
@@ -512,6 +518,13 @@ def main() -> None:
             f"{y}:{v:.1%}" for y, v in gross_diff.groupby(gross_diff.index.year).mean().items()
         )
     )
+
+    print("\n=== Position sign changes per pair per year (FULL; signal turnover diagnostic) ===")
+    for name, W in strats.items():
+        Ws = np.sign(W.loc[START:])
+        flips = (Ws.diff().abs() > 0).sum() / (len(Ws) / mk.ann)
+        active = flips[Ws.abs().sum() > 0]
+        print(f"{name:<40} {active.mean():>5.1f}")
 
     print(
         "\nVariants: 9 strategy variants [(a), (b), (c)x2, (d)x2, (e1), (e2), (f)] + 2 benchmarks; "
